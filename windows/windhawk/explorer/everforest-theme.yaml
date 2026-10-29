@@ -1,0 +1,56 @@
+# Everforest (High Contrast / hard, dark) theme for Windows 11 File Explorer Styler
+# AUTO-GENERATED from palette/tokens.yaml（上游 everforest-themes 仓库） — 不要手改，改 tokens 后重跑生成器
+# Based on sainnhe/everforest, hard/contrast = High, dark background.
+# Import: Windhawk > Windows 11 File Explorer Styler > Settings > "Textual mode" > paste this.
+
+controlStyles:
+  # Tab 条：标签文字（fg）
+  - target: Grid#TabContainer > ContentPresenter > StackPanel > TextBlock
+    styles:
+      - Foreground=#d3c6aa
+  # Tab 条：标签选中背景（浮层，低调高亮）
+  - target: TabViewItem > Grid#LayoutRoot > Canvas > Microsoft.UI.Xaml.Shapes.Path#SelectedBackgroundPath
+    styles:
+      - Fill=#374145
+  # Tab 条整体背景（面板）
+  - target: Grid#TabContainerGrid
+    styles:
+      - Background=#2e383c
+  # Tab 内容区（背景）
+  - target: TabViewItem > Grid#LayoutRoot > Grid#TabContainer
+    styles:
+      - Background=#272e33
+  # 导航栏背景（面板）
+  - target: Grid#NavigationBarControlGrid
+    styles:
+      - Background=#2e383c
+  # 命令栏背景（面板）
+  - target: Grid#CommandBarControlRootGrid
+    styles:
+      - Background=#2e383c
+  - target: CommandBar#FileExplorerCommandBar
+    styles:
+      - Background=#2e383c
+  - target: FileExplorerExtensions.CommandBarControl_Wave1 > Grid
+    styles:
+      - Background=#2e383c
+  # 详情视图背景（背景）
+  - target: Grid#DetailsViewControlRootGrid
+    styles:
+      - Background=#272e33
+  # 详情视图缩略图背景（浮层）
+  - target: StackPanel#DetailsViewThumbnail
+    styles:
+      - Background=#374145
+  # 主页背景（背景）
+  - target: Grid#HomeViewRootGrid
+    styles:
+      - Background=#272e33
+  # Gallery / 图库页背景（背景）
+  - target: FileExplorerExtensions.GalleryViewControl#GalleryViewControl > Grid
+    styles:
+      - Background=#272e33
+  # 主体内容区背景（背景）— 文件列表/内容区域根布局
+  - target: Grid#PART_LayoutRoot
+    styles:
+      - Background=#272e33

@@ -1,0 +1,37 @@
+{
+  "name": "everforest-hard",
+  "displayName": "Everforest Hard",
+  "description": "Everforest (hard / high contrast) theme for VSCode, generated from design tokens. Independent of Everforest Pro.",
+  "version": "1.0.0",
+  "publisher": "Agustin",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.55.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "everforest",
+    "theme",
+    "dark",
+    "light",
+    "hard",
+    "high-contrast"
+  ],
+  "icon": "icon.png",
+  "contributes": {
+    "themes": [
+      {
+        "label": "Everforest Hard Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/everforest-hard-dark.json"
+      },
+      {
+        "label": "Everforest Hard Light",
+        "uiTheme": "vs",
+        "path": "./themes/everforest-hard-light.json"
+      }
+    ]
+  }
+}

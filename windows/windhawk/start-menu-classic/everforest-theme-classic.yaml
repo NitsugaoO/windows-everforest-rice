@@ -1,0 +1,125 @@
+# Everforest (High Contrast) theme for the classic Windows 11 Start menu
+# AUTO-GENERATED from palette/tokens.yaml（上游 everforest-themes 仓库） — 不要手改，改 tokens 后重跑生成器
+# Based on sainnhe/everforest, hard/contrast = High, dark background.
+# Import: Windhawk > Windows 11 Start Menu Styler > Settings > "Textual mode" > paste this.
+
+controlStyles:
+  - target: Border#AcrylicBorder
+    styles:
+      - Background=#272e33
+      - BorderBrush=#a7c080
+  - target: Border#AcrylicOverlay
+    styles:
+      - Background=#272e33
+  - target: StartDocked.SearchBoxToggleButton > Grid > Border
+    styles:
+      - Background=#272e33
+      - BorderBrush=transparent
+  - target: StartMenu.ExpandedFolderList > Grid > Border
+    styles:
+      - Background=#2e383c
+  - target: TextBlock#PlaceholderText
+    styles:
+      - Foreground=#80859289
+  - target: Windows.UI.Xaml.Controls.Button
+    styles:
+      - Background=#272e33
+  - target: StackPanel > Windows.UI.Xaml.Controls.Button
+    styles:
+      - Background=transparent
+      - BorderBrush=transparent
+  - target: Microsoft.UI.Xaml.Controls.ItemsRepeater > Windows.UI.Xaml.Controls.Button
+    styles:
+      - Background=transparent
+      - BorderBrush=transparent
+  # 应用名（Pinned 区）—— 基础色 fallback
+  - target: StartMenu.PinnedListTile > Grid#Root > Grid#DisplayNameAndDownloadIconContainer > TextBlock
+    styles:
+      - Foreground=#859289
+  - target: StartMenu.PinnedListTile > * > TextBlock
+    styles:
+      - Foreground=#859289
+  # 应用名文字——ui 三态（仅文字色，hover 背景渐变/边框保持不动）
+  # 状态组在内部 Grid@CommonStates 上（ListViewItem 标准状态名）
+  - target: StartMenu.PinnedListTile > Grid@CommonStates > * > TextBlock
+    styles:
+      - Foreground@Normal=#7a8478
+      - Foreground@PointerOver=#859289
+      - Foreground@Selected=#d3c6aa
+      - Foreground@PointerOverSelected=#d3c6aa
+  - target: TextBlock#DisplayName
+    styles:
+      - Foreground=#859289
+  - target: TextBlock#Title
+    styles:
+      - Foreground=#859289
+  - target: TextBlock#Subtitle
+    styles:
+      - Foreground=#859289
+  # 标题/强调文字 —— 绿色
+  - target: TextBlock#PinnedListHeaderText
+    styles:
+      - Foreground=#a7c080
+  - target: TextBlock#TopLevelSuggestionsListHeaderText
+    styles:
+      - Foreground=#a7c080
+  - target: TextBlock#AllAppsHeading
+    styles:
+      - Foreground=#a7c080
+  - target: TextBlock#MoreSuggestionsListHeaderText
+    styles:
+      - Foreground=#a7c080
+  - target: StartDocked.AllAppsGridListViewItem > * > TextBlock
+    styles:
+      - Foreground=#859289
+  - target: StartDocked.AllAppsZoomListViewItem > * > TextBlock
+    styles:
+      - Foreground=#859289
+  - target: TextBlock#AppDisplayName
+    styles:
+      - Foreground=#859289
+  - target: TextBlock#Text
+    styles:
+      - Foreground=#859289
+  - target: TextBlock#FolderGlyph
+    styles:
+      - Foreground=#dbbc7f
+  - target: TextBlock#StatusMessage
+    styles:
+      - Foreground=#a7c080
+  - target: Windows.UI.Xaml.Controls.Border#ContentBorder > Windows.UI.Xaml.Controls.Grid#DroppedFlickerWorkaroundWrapper > Border@CommonStates
+    styles:
+      - Background:=<LinearGradientBrush StartPoint="0.5,0" EndPoint="0,0.5"> <GradientStop Color="#26a7c080" Offset="0" /><GradientStop Color="#26dbbc7f" Offset="1" /></LinearGradientBrush>
+      - BorderBrush:=<LinearGradientBrush StartPoint="0.5,0" EndPoint="0,0.5"> <GradientStop Color="#82a7c080" Offset="0" /><GradientStop Color="#82dbbc7f" Offset="1" /></LinearGradientBrush>
+      - CornerRadius=6
+  - target: Windows.UI.Xaml.Controls.Border#ContentBorder > Windows.UI.Xaml.Controls.Grid#DroppedFlickerWorkaroundWrapper > Border#BackgroundBorder
+    styles:
+      - Background=Transparent
+  - target: Border#AppBorder
+    styles:
+      - Background=#272e33
+  - target: Border#TaskbarSearchBackground
+    styles:
+      - Background=#2e383c
+      - BorderBrush=Transparent
+  - target: Grid
+    styles:
+      - RequestedTheme=2
+  - target: TextBlock#UserTileNameText
+    styles:
+      - Foreground=#d3c6aa
+  - target: Windows.UI.Xaml.Controls.ContentPresenter > Windows.UI.Xaml.Controls.FontIcon > Windows.UI.Xaml.Controls.Grid > Windows.UI.Xaml.Controls.TextBlock
+    styles:
+      - Foreground=#9da9a0
+  - target: Windows.UI.Xaml.Controls.Grid > Windows.UI.Xaml.Controls.FontIcon > Windows.UI.Xaml.Controls.Grid > Windows.UI.Xaml.Controls.TextBlock
+    styles:
+      - Foreground=#dbbc7f
+  - target: MenuFlyoutPresenter
+    styles:
+      - Background=#2e383c
+  - target: Windows.UI.Xaml.Controls.FontIcon#SearchGlyph > Windows.UI.Xaml.Controls.Grid > Windows.UI.Xaml.Controls.TextBlock
+    styles:
+      - Foreground=#859289
+  - target: Microsoft.UI.Xaml.Controls.DropDownButton > Grid
+    styles:
+      - Background=#272e33

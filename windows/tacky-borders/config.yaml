@@ -1,0 +1,20 @@
+# Everforest (High Contrast / hard, dark) theme for tacky-borders
+# AUTO-GENERATED from palette/tokens.yaml（上游 everforest-themes 仓库） — 不要手改，改 tokens 后重跑生成器
+# Based on sainnhe/everforest, hard/contrast = High, dark background.
+# 生效位置: %USERPROFILE%\.config\tacky-borders\config.yaml
+# 改完保存后 watch_config_changes 自动热重载;或托盘图标右键 -> Reload Borders
+
+# 只给"当前激活窗口"画边框,非激活窗口不画
+watch_config_changes: true
+
+global:
+  border_width: 2
+  border_offset: -1
+  # -1 = 自动匹配窗口圆角,Windows 11 下推荐
+  border_radius: -1
+
+  # 激活窗口边框 Everforest 鼠尾草绿
+  active_color: "#a7c080"
+
+  # 非激活窗口:完全透明 = 不显示边框
+  inactive_color: "#00000000"

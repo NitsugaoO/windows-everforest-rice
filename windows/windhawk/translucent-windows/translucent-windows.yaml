@@ -1,0 +1,24 @@
+# Windhawk · Translucent Windows —— 只给 yasb 状态栏开玻璃
+# Import: Windhawk > Translucent Windows > Settings > "Textual mode" > paste this
+#
+# 要点：
+#   1. 全局三项全关（RenderingMod / BackgroundEffects / FlyoutsEffects），
+#      否则这个 mod 会对所有窗口生效。
+#   2. 只留 yasb.exe 一条进程规则 —— 源码里 RuledPrograms[i].BackgroundEffects
+#      是独立设置，因此能做到「只有状态栏有玻璃」。
+#   3. AccentBlurBehind 是 ARGB（无 #）：B8 = 72% 透明度，与 yasb CSS 里
+#      --yasb-bar-bg 的 0.72 对应；颜色随角色表「背景」变化。
+#   4. 若 acrylicblur 无效（yasb 窗口是 WS_EX_LAYERED），把 type 换成 acrylicsystem。
+RenderingMod:
+  ThemeBackground: 0
+  SysColors: 0
+  AccentColorControls: 0
+BackgroundEffects:
+  type: none
+  AccentBlurBehind: B8272e33
+FlyoutsEffects: 0
+RuledPrograms:
+  - target: yasb.exe
+    BackgroundEffects:
+      type: acrylicblur
+      AccentBlurBehind: B8272e33

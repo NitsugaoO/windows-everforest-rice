@@ -1,0 +1,310 @@
+# ============================================================
+#  GlazeWM 配置 — 精简版
+#  修改后按 Alt+Shift+R 即可热重载,无需重启
+# ============================================================
+
+general:
+  # YASB 状态栏随 GlazeWM 启动
+  startup_commands: ['shell-exec yasb']
+  shutdown_commands: []
+  config_reload_commands: []
+
+  # 鼠标移到窗口上自动聚焦(喜欢点哪聚焦哪可设为 true)
+  focus_follows_cursor: false
+
+  # 再次按当前 workspace 快捷键时,回到上一个 workspace
+  toggle_workspace_on_refocus: false
+
+  cursor_jump:
+    # 切换焦点时自动把鼠标移到新窗口中心
+    enabled: true
+    # trigger: 'monitor_focus' | 'window_focus'
+    trigger: 'monitor_focus'
+
+  # 切换 workspace 时如何隐藏窗口:cloak 是 Win 推荐项
+  hide_method: 'cloak'
+  show_all_in_taskbar: false
+
+gaps:
+  # 紧凑布局
+  scale_with_dpi: true
+  inner_gap: '8px'   # 相邻窗口间距
+  outer_gap:
+    top: '8px'
+    right: '8px'
+    bottom: '8px'
+    left: '8px'
+
+window_effects:
+  # 聚焦窗口:Everforest 鼠尾草绿边框
+  focused_window:
+    border:
+      enabled: true
+      color: '#a7c080'
+    hide_title_bar:
+      # 试过开启（2026-10-28）：看不出区别，已回退。
+      enabled: false
+    corner_style:
+      enabled: false
+      style: 'square'
+    transparency:
+      enabled: true
+      opacity: '100%'
+
+  # 非聚焦窗口:Everforest 边框灰(bg/border)
+  other_windows:
+    border:
+      enabled: true
+      color: '#414b50'
+    hide_title_bar:
+      enabled: false
+    corner_style:
+      enabled: false
+      style: 'square'
+    transparency:
+      # 关闭透明：非聚焦窗口保持不透明（原来 opacity: 90%）
+      enabled: false
+      opacity: '100%'
+
+window_behavior:
+  initial_state: 'tiling'   # 新窗口默认平铺
+  state_defaults:
+    floating:
+      centered: true        # 浮动窗口默认居中
+      shown_on_top: false
+    fullscreen:
+      # true = 走 Windows 原生最大化（会避开 YASB 的 AppBar）；
+      # false = GlazeWM 自研全屏，会覆盖整个显示器连状态栏一起吃掉
+      maximized: true
+      shown_on_top: false
+
+workspaces:
+  - name: 'all'
+    display_name: 'all'
+  - name: 'web'
+    display_name: 'web'
+  - name: 'dev'
+    display_name: 'dev'
+  - name: 'game'
+    display_name: 'game'
+
+window_rules:
+  # YASB 状态栏不参与平铺
+  - commands: ['ignore']
+    match:
+      - window_process: { equals: 'yasb' }
+
+  # tupa-launcher 面板：自动浮动 + 居中 + 固定尺寸，不参与平铺
+  # 位置和大小交给 GlazeWM 管（而不是面板自己 SetWindowPos），这样
+  # 它和你其他浮动窗口的布局规则保持一致。
+  # 注意命令顺序：size 会改变窗口尺寸，所以必须在 size 之后再 position --centered，
+  # 否则居中是按“改尺寸前”的大小算的，会偏。
+  #
+  # 1) 自绘窗口（`tupa-launcher.exe --gui`）：进程名 + winit 窗口类名
+  - commands: ['set-floating', 'size --width 62% --height 55%', 'position --centered']
+    match:
+      - window_process: { equals: 'tupa-launcher' }
+        window_class: { equals: 'TupaLauncherWindow' }
+
+  # 2) 旧版 TUI 面板（Windows Terminal 里的标签页）
+  # 窗口类是 Windows Terminal 的，再用标题前缀锁定面板，避免影响普通终端窗口。
+  # 只认 "tupa-launcher" 本身或带 " - " / ": " 后缀的标题；pi 在项目目录里工作时
+  # 标题是 "π - tupa-launcher"，不能误判。
+  - commands: ['set-floating', 'size --width 62% --height 55%', 'position --centered']
+    match:
+      - window_class: { equals: 'CASCADIA_HOSTING_WINDOW_CLASS' }
+        window_title: { regex: '^tupa-launcher($| - |: )' }
+
+  - commands: ['ignore']
+    match:
+      # 画中画窗口不参与平铺
+      - window_title: { regex: '[Pp]icture.in.[Pp]icture' }
+        window_class: { regex: 'Chrome_WidgetWin_1|MozillaDialogClass' }
+
+      # 常用弹窗类程序忽略平铺
+      - window_process: { equals: 'PowerToys' }
+      - window_process: { equals: 'Lively' }
+
+  # QQ 完全不管:不参与平铺,也无需 GlazeWM 定位,交给 Windows 原生管理
+  - commands: ['ignore']
+    match:
+      - window_process: { equals: 'QQ' }
+
+  # Clash Party 主窗口完全不管,交给 Windows 原生管理
+  - commands: ['ignore']
+    match:
+      - window_process: { equals: 'Clash Party' }
+
+  # Plain Craft Launcher 2 启动器完全不管,交给 Windows 原生管理
+  - commands: ['ignore']
+    match:
+      - window_process: { equals: 'Plain Craft Launcher 2' }
+
+  # Sakura Frp 启动器(SakuraLauncher)完全不管,交给 Windows 原生管理
+  - commands: ['ignore']
+    match:
+      - window_process: { equals: 'SakuraLauncher' }
+
+  # WebSocket Reflector X(wsrx-desktop)自动浮动,不参与平铺
+  - commands: ['set-floating']
+    match:
+      - window_process: { equals: 'wsrx-desktop' }
+
+  # HiBit Uninstaller 自动浮动,不参与平铺
+  # 用的是便携版,所以进程名是 'HiBitUninstaller-Portable' 而非 'HiBitUninstaller'
+  - commands: ['set-floating']
+    match:
+      - window_process: { equals: 'HiBitUninstaller-Portable' }
+
+  # 文件资源管理器自动浮动(居中显示)
+  # 必须带 window_class 限定:explorer.exe 还持有桌面(Progman/WorkerW)、
+  # 任务栏(Shell_TrayWnd)、托盘等 shell 窗口,只按进程名匹配会连它们一起命中。
+  - commands: ['set-floating']
+    match:
+      - window_process: { equals: 'explorer' }
+        window_class: { regex: 'CabinetWClass|ExploreWClass' }
+
+  # NanaZip 自动浮动,不参与平铺
+  # 实测(MSIX 版 5.x)进程名是 'NanaZip.Modern.FileManager'(窗口类名同名),
+  # 旧版 7-Zip 界面风格的进程名是 'NanaZip' —— 用前缀匹配同时覆盖二者。
+  - commands: ['set-floating']
+    match:
+      - window_process: { regex: '^NanaZip' }
+
+  # IDA 主窗口平铺,弹窗自动浮动
+  # 不能按进程名整体浮动:IDA 是 Qt 应用,弹窗(QDialog)与主窗口的进程名、窗口类名
+  # 完全相同(实测 IDA Free 9.4 都是 ida / Qt682QTQWindowIcon),而 GlazeWM 的
+  # window_rules 只有 window_process / window_class / window_title 三个匹配维度,
+  # 没有「这是不是对话框」的判定,所以只能靠标题把主窗口摘出去:
+  #   主窗口标题形如 'IDA - <文件> - Only for non-commercial use'(未打开文件时是 'IDA: Quick start'),
+  #   弹窗标题则是各色 UI 词汇(Add breakpoint / Rename / Warning …)。
+  #   '^IDA\b' 能同时盖住 'IDA' / 'IDA - …' / 'IDA: Quick start'(实测 IDA Free 9.4)。
+  # 注意:GlazeWM 的 not_regex 是「不匹配才命中」,规则在窗口创建时执行一次,
+  # 所以主窗口后来改标题(打开/另存文件)不会被重新判成弹窗。
+  # 若某弹窗确实以 'IDA' 开头被漏掉,把这条改成只按 window_process 匹配即可(整体浮动)。
+  - commands: ['set-floating']
+    match:
+      - window_process: { equals: 'ida' }
+        window_title: { not_regex: '^IDA\b' }
+
+  # Windows 计算器自动浮动,不参与平铺
+  # 注意:计算器是 UWP 应用(进程 CalculatorApp.exe),但它的顶层窗口由
+  # ApplicationFrameHost.exe 寄主(窗口类 ApplicationFrameWindow) —— 按进程名匹配
+  # 会连设置/照片/商店等所有 UWP 窗口一起浮动,只能用标题锁定。
+  # 标题随系统语言变化,中英两版都写上(实测中文版窗口标题就是 '计算器')。
+  - commands: ['set-floating']
+    match:
+      - window_class: { equals: 'ApplicationFrameWindow' }
+        window_title: { regex: '^(计算器|Calculator)$' }
+
+  # Windhawk 界面完全不管,交给 Windows 原生管理
+  # 注意:Windhawk 的图形界面是定制版 VSCodium(位于 C:\Program Files\Windhawk\UI\VSCodium.exe),
+  # 所以窗口进程名是 'VSCodium' 而非 'windhawk';windhawk.exe 只是托盘/守护进程,
+  # 它自己只有隐藏窗口 'WindhawkDaemon',不持有任何可见窗口。
+  - commands: ['ignore']
+    match:
+      - window_process: { equals: 'VSCodium' }
+
+binding_modes:
+  # 按 Alt+R 进入 resize 模式:方向键/HJKL 调大小,Esc 退出
+  - name: 'resize'
+    keybindings:
+      - commands: ['resize --width -2%']
+        bindings: ['h', 'left']
+      - commands: ['resize --width +2%']
+        bindings: ['l', 'right']
+      - commands: ['resize --height +2%']
+        bindings: ['k', 'up']
+      - commands: ['resize --height -2%']
+        bindings: ['j', 'down']
+      - commands: ['wm-disable-binding-mode --name resize']
+        bindings: ['escape', 'enter']
+
+keybindings:
+  # ---- 焦点移动(HJKL / 方向键)----
+  - commands: ['focus --direction left']
+    bindings: ['alt+h', 'alt+left']
+  - commands: ['focus --direction right']
+    bindings: ['alt+l', 'alt+right']
+  - commands: ['focus --direction up']
+    bindings: ['alt+k']
+  - commands: ['focus --direction down']
+    bindings: ['alt+j']
+
+  # ---- 窗口移动 ----
+  - commands: ['move --direction left']
+    bindings: ['alt+shift+h', 'alt+shift+left']
+  - commands: ['move --direction right']
+    bindings: ['alt+shift+l', 'alt+shift+right']
+  - commands: ['move --direction up']
+    bindings: ['alt+shift+k']
+  - commands: ['move --direction down']
+    bindings: ['alt+shift+j']
+
+  # ---- 调整窗口大小 ----
+  - commands: ['resize --width -2%']
+    bindings: ['alt+u']
+  - commands: ['resize --width +2%']
+    bindings: ['alt+p']
+  - commands: ['resize --height +2%']
+    bindings: ['alt+o']
+  - commands: ['resize --height -2%']
+    bindings: ['alt+i']
+
+  # 进入 resize 模式(方向键/HJKL)
+  - commands: ['wm-enable-binding-mode --name resize']
+    bindings: ['alt+r']
+
+  # ---- 窗口状态切换 ----
+  - commands: ['toggle-floating --centered']   # 浮动/平铺
+    bindings: ['alt+shift+space']
+  - commands: ['toggle-tiling']
+    bindings: ['alt+t']
+  - commands: ['toggle-fullscreen']             # 全屏
+    bindings: ['alt+f']
+  - commands: ['toggle-minimized']              # 最小化
+    bindings: ['alt+m']
+  - commands: ['toggle-tiling-direction']       # 切换平铺方向
+    bindings: ['alt+shift+v']
+  - commands: ['wm-cycle-focus']                # 平铺→浮动→全屏循环
+    bindings: ['alt+space']
+  - commands: ['close']                         # 关闭窗口
+    bindings: ['alt+shift+q']
+
+  # ---- WM 控制 ----
+  - commands: ['wm-reload-config']              # 重载配置
+    bindings: ['alt+shift+r']
+  - commands: ['wm-toggle-pause']               # 暂停/恢复 WM
+    bindings: ['alt+shift+p']
+  - commands: ['wm-exit']                       # 退出 GlazeWM
+    bindings: ['alt+shift+e']
+
+  # ---- 启动程序 ----
+  - commands: ['shell-exec wt']                 # Windows Terminal
+    bindings: ['alt+enter']
+
+  # ---- workspace 切换 ----
+  - commands: ['focus --next-active-workspace']
+    bindings: ['alt+s']
+  - commands: ['focus --prev-active-workspace']
+    bindings: ['alt+a']
+  - commands: ['focus --recent-workspace']
+    bindings: ['alt+d']
+  - commands: ['focus --workspace all']
+    bindings: ['alt+1']
+  - commands: ['focus --workspace web']
+    bindings: ['alt+2']
+  - commands: ['focus --workspace dev']
+    bindings: ['alt+3']
+  - commands: ['focus --workspace game']
+    bindings: ['alt+4']
+
+  # ---- 窗口移动到 workspace ----
+  - commands: ['move --workspace all', 'focus --workspace all']
+    bindings: ['alt+shift+1']
+  - commands: ['move --workspace web', 'focus --workspace web']
+    bindings: ['alt+shift+2']
+  - commands: ['move --workspace dev', 'focus --workspace dev']
+    bindings: ['alt+shift+3']
+  - commands: ['move --workspace game', 'focus --workspace game']
+    bindings: ['alt+shift+4']

@@ -1,0 +1,9 @@
+# 导出工具的产物 / 临时文件
+__pycache__/
+*.pyc
+.desktop.ini
+Thumbs.db
+
+# Windows 生成 / 备份
+*.bak
+*.orig-backup

@@ -1,0 +1,12 @@
+# ===== ~/.gdbinit =====
+# 权威源: my_dot/dotfiles/wsl/gdb/gdbinit
+# 改这里之前请改仓库里那份,然后跑 sync-dotfiles.ps1。
+
+# pwndbg(用 ~ 展开,换安装位置只需改这一行)
+source ~/ctf/pwndbg/gdbinit.py
+
+# 某些环境下 debuginfod 会让 gdb 启动时卡着等符号服务器
+set debuginfod enabled off
+
+# pwndbg context 分屏(tmux 自动 / Windows Terminal 手动或窗口名)
+source ~/.gdbinit.d/pwndbg-ctx-split.gdb

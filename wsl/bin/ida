@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+# ida — 在 WSL 终端里用 Windows 版 IDA 打开文件
+#
+# 原理：Windows 侧的 IDA 可以直接读 \\wsl.localhost\<发行版>\... ，
+# 所以 WSL 内的样本不必复制；用 cmd.exe start 启动可让 IDA 脱离 WSL 进程树
+# （终端立刻返回，关掉终端甚至 wsl --shutdown 都不影响已打开的 IDA）。
+#
+# 权威源：my_dot/dotfiles/wsl/bin/ida
+# 改这份文件后跑 my_dot\sync-dotfiles.ps1 重新部署到 ~/.local/bin/ida。
+set -euo pipefail
+
+die() { printf 'ida: %s\n' "$*" >&2; exit 1; }
+
+usage() {
+  cat <<'EOF'
+用法:
+  ida <file>          用 Windows 版 IDA 打开文件（WSL 内文件走 \\wsl.localhost）
+  ida --copy <file>   先复制到 Windows 临时目录再打开（IDA 读写全在本地盘，最快）
+  ida                 只启动 IDA
+  ida -h | --help     显示本帮助
+
+环境变量:
+  IDA_EXE        指定 ida.exe 的路径（默认自动探测 Program Files 下版本最高的 IDA）
+  IDA_COPY_DIR   --copy 的落地目录（默认 Windows 侧 %LOCALAPPDATA%\Temp\ida-wsl）
+  IDA_LAUNCHER   启动方式: powershell（默认）| setsid
+                 若 ida 仍然占住终端，试试 IDA_LAUNCHER=setsid
+EOF
+}
+
+# --- 定位 ida.exe ------------------------------------------------------------
+# 9.x 只有 ida.exe；老版本可能叫 ida64.exe。取版本号最大的那个安装目录。
+find_ida() {
+  local hit
+  hit=$(ls -1d "/mnt/c/Program Files"/IDA*/ida.exe \
+            "/mnt/c/Program Files"/IDA*/ida64.exe \
+            "/mnt/c/Program Files (x86)"/IDA*/ida.exe \
+            "/mnt/c/Program Files (x86)"/IDA*/ida64.exe 2>/dev/null | sort -V | tail -1)
+  [ -n "$hit" ] || return 1
+  printf '%s' "$hit"
+}
+
+# --- --copy 的落地目录（Windows 侧，取回后在 WSL 里是 /mnt/c/...）------------
+copy_root() {
+  local win
+  if [ -n "${IDA_COPY_DIR:-}" ]; then printf '%s' "$IDA_COPY_DIR"; return 0; fi
+  win=$(cmd.exe /c 'echo %LOCALAPPDATA%' </dev/null 2>/dev/null | tr -d '\r\n' || true)
+  if [ -n "$win" ]; then
+    printf '%s/Temp/ida-wsl' "$(wslpath -u -- "$win")"
+  else
+    # 拿不到 Windows 侧路径就落在 WSL 自己的临时目录（本脚本只用它做--copy 的中转）
+    printf '%s' "${TMPDIR:-/tmp}/ida-wsl"
+  fi
+}
+
+# --- 交给 Windows 侧独立启动 --------------------------------------------------
+# 为什么不用 `cmd.exe /c start`：这是 WSL2 ↔ ConPTY interop 的已知 bug ——
+# cmd /c start 并不真的 fork，GUI 子进程会继续占着终端（Ctrl+C 也常常无效），
+# 见 microsoft/WSL#5811。PowerShell 的 Start-Process 走 ShellExecute，子进程
+# 不继承 interop 的 std 句柄，能立刻把提示符还给用户。
+# 如果这里仍然阻塞，用 IDA_LAUNCHER=setsid 换成“后台 + 丢弃全部 stdio + 脱离会话”。
+launch() {
+  local exe="$1"; shift
+  case "${IDA_LAUNCHER:-powershell}" in
+    powershell)
+      local qexe=${exe//\'/\'\'} list='' a qa
+      for a in "$@"; do
+        qa=${a//\"/\\\"}          # 参数内部的 " 先转义
+        list+="'\"$qa\"',"            # 包成 PowerShell 单引号字符串，内容是 "参数"
+      done
+      list=${list%,}
+      # timeout 只是兜底；它触发时会 kill 正在跑的 powershell ——
+      # 别在它跑的时候按 Ctrl+C（在 /mnt/c 上被中断的 I/O 会让 DrvFs 挂载失效）。
+      if [ -n "$list" ]; then
+        timeout 30 powershell.exe -NoProfile -Command \
+          "Start-Process -FilePath '$qexe' -ArgumentList $list" </dev/null >/dev/null 2>&1 || true
+      else
+        timeout 30 powershell.exe -NoProfile -Command \
+          "Start-Process -FilePath '$qexe'" </dev/null >/dev/null 2>&1 || true
+      fi
+      ;;
+    setsid)
+      setsid "$exe" "$@" </dev/null >/dev/null 2>&1 &
+      disown 2>/dev/null || true
+      ;;
+    *)
+      die "未知的 IDA_LAUNCHER: $IDA_LAUNCHER（可用 powershell / setsid）"
+      ;;
+  esac
+}
+
+# -----------------------------------------------------------------------------
+copy_first=false
+case "${1:-}" in
+  -h|--help) usage; exit 0 ;;
+  --copy)    copy_first=true; shift ;;
+  --)        shift ;;
+esac
+
+if [ -n "${IDA_EXE:-}" ]; then
+  ida_exe="$IDA_EXE"
+else
+  ida_exe=$(find_ida) || ida_exe=''
+fi
+if [ -z "$ida_exe" ] || [ ! -f "$ida_exe" ]; then
+  # /mnt/c 挂载坏掉时 ls 会返回 EIO、stdout 空，看起来就像“根本没装 IDA”。
+  # 这两种失败必须分开报，否则排查起来极痛苦（真实踩过一次）。
+  if ! ls /mnt/c >/dev/null 2>&1; then
+    die "访问 /mnt/c 失败 —— WSL 的 DrvFs 挂载多半已经失效（Input/output error）。
+     修（不用重启 WSL）:
+       wsl.exe -d Ubuntu-24.04 -u root -- bash -c 'umount -l /mnt/c && mount -t drvfs C: /mnt/c'
+     兜底: wsl --shutdown 后重进（会杀掉 WSL 内所有进程）。
+     详见 dotfiles/wsl/README.md 的「故障排除」。"
+  fi
+  die "没找到 ida.exe（可用 IDA_EXE=/path/to/ida.exe 指定）"
+fi
+ida_win=$(wslpath -w -- "$ida_exe")
+
+# 无参数：只开 IDA
+if [ $# -eq 0 ]; then
+  launch "$ida_win"
+  exit 0
+fi
+
+[ $# -eq 1 ] || die "只接受一个文件参数（收到 $# 个）；IDA 一次只打开一个输入文件"
+
+src=$(realpath -- "$1" 2>/dev/null) || die "路径无法解析: $1"
+[ -e "$src" ] || die "路径不存在: $1"
+[ -f "$src" ] || die "不是普通文件: $1"
+
+win_file=$(wslpath -w -- "$src")
+
+# 本来就在 Windows 盘上（例如 /mnt/c/...）→ 无需复制
+if [[ "$win_file" != \\\\* ]]; then
+  launch "$ida_win" "$win_file"
+  exit 0
+fi
+
+# 在 WSL 文件系统里：默认直接以 UNC 打开；--copy 时先落到 Windows 本地盘
+if $copy_first; then
+  root=$(copy_root)
+  mkdir -p -- "$root"
+  dest="$root/$(basename -- "$src")"
+  cp -f -- "$src" "$dest"
+  win_file=$(wslpath -w -- "$dest")
+  printf 'ida: 已复制到 %s\n' "$(wslpath -w -- "$dest")"
+fi
+
+launch "$ida_win" "$win_file"

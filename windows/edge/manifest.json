@@ -1,0 +1,80 @@
+{
+  "manifest_version": 3,
+  "version": "1.0.0",
+  "name": "Everforest Edge Theme",
+  "description": "🍂 Comfortable & pleasant dark theme for Microsoft Edge, based on sainnhe/everforest (high contrast).",
+  "theme": {
+    "colors": {
+      "toolbar": [
+        39,
+        46,
+        51
+      ],
+      "frame": [
+        30,
+        35,
+        38
+      ],
+      "omnibox_text": [
+        211,
+        198,
+        170
+      ],
+      "omnibox_background": [
+        39,
+        46,
+        51
+      ],
+      "toolbar_button_icon": [
+        211,
+        198,
+        170
+      ],
+      "toolbar_text": [
+        211,
+        198,
+        170
+      ],
+      "tab_background_text": [
+        133,
+        146,
+        137
+      ],
+      "ntp_background": [
+        39,
+        46,
+        51
+      ],
+      "ntp_text": [
+        211,
+        198,
+        170
+      ],
+      "bookmark_text": [
+        211,
+        198,
+        170
+      ],
+      "tab_text": [
+        211,
+        198,
+        170
+      ],
+      "frame_inactive": [
+        46,
+        56,
+        60
+      ],
+      "background_tab_inactive": [
+        46,
+        56,
+        60
+      ],
+      "background_tab": [
+        39,
+        46,
+        51
+      ]
+    }
+  }
+}

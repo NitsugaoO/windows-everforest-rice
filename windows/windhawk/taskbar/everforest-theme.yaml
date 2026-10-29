@@ -1,0 +1,76 @@
+# Everforest (High Contrast / hard, dark) theme for Windows 11 Taskbar Styler
+# AUTO-GENERATED from palette/tokens.yaml（上游 everforest-themes 仓库） — 不要手改，改 tokens 后重跑生成器
+# Based on sainnhe/everforest, hard/contrast = High, dark background.
+# Import: Windhawk > Windows 11 Taskbar Styler > Settings > "Textual mode" > paste this.
+
+controlStyles:
+  # 任务栏底板背景（亚克力）
+  # WindhawkBlur 是 mod 自带的模糊实现，不依赖系统 AcrylicBrush（后者在多显示器上有已知问题）。
+  # TintColor 跟随角色表；TintOpacity 0=全透 1=实色（0.72 保住 Everforest 暖色，不被壁纸带偏）。
+  - target: Taskbar.TaskbarFrame > Grid#RootGrid > Taskbar.TaskbarBackground > Grid > Rectangle#BackgroundFill
+    styles:
+      - Fill:=<WindhawkBlur BlurAmount="20" TintColor="#272e33" TintOpacity="0.72" FallbackColor="#272e33"/>
+  # 任务栏边框（浮层）
+  - target: Rectangle#BackgroundStroke
+    styles:
+      - Fill=#374145
+  # 缩略图 / 悬浮 flyout 背景（玻璃：与底板同一套参数）
+  - target: Taskbar.TaskbarBackground#HoverFlyoutBackgroundControl > Grid > Rectangle#BackgroundFill
+    styles:
+      - Fill:=<WindhawkBlur BlurAmount="20" TintColor="#272e33" TintOpacity="0.72" FallbackColor="#272e33"/>
+  # 任务列表按钮：不要实色底，改成「只在交互时出现」的细边框（让玻璃透出来）
+  # 状态组挂在父元素上（@CommonStates），否则属性会对所有状态生效 = 永远实色
+  # 应用按钮：不再自定义悬停效果 —— 直接用系统默认（与「开始按钮」完全同一套
+  # 系统画刷 + 系统过渡动画），这里只留圆角保持一致。
+  #
+  # 历史：曾在这里铺过 #1A/#4D/#66 的浮层底 + 草绿边框，虽然解决了“被图标盖住 /
+  # 闪一下消失”，但系统默认的悬停观感更好，故全部撤掉。
+  - target: Grid#IconPanel > Border#BackgroundElement, Taskbar.TaskListLabeledButtonPanel > Border#BackgroundElement
+    styles:
+      - CornerRadius=6
+  # 任务列表按钮圆角
+  - target: Taskbar.ExperienceToggleButton
+    styles:
+      - CornerRadius=6
+  - target: Taskbar.SearchBoxButton
+    styles:
+      - CornerRadius=6
+  - target: Taskbar.TaskListButton
+    styles:
+      - CornerRadius=6
+  # 任务列表文字——ui 三态（任务栏状态名带 Active/Inactive 前缀）
+  # 未激活(未选中):灰 → 未激活+悬停:亮灰 → 激活(选中):米白
+  # fallback：状态规则不匹配时的默认色
+  - target: TextBlock#LabelControl
+    styles:
+      - Foreground=#859289
+  # 三态规则：@CommonStates 视觉状态 + 状态化前景色（官方 WinXP 主题同款写法）
+  - target: Taskbar.TaskListLabeledButtonPanel@CommonStates > TextBlock#LabelControl
+    styles:
+      - Foreground@InactiveNormal=#7a8478
+      - Foreground@InactivePointerOver=#859289
+      - Foreground@ActiveNormal=#d3c6aa
+      - Foreground@ActivePointerOver=#d3c6aa
+  # 运行指示条（Everforest green）
+  - target: Grid#IconPanel@RunningIndicatorStates > Rectangle#RunningIndicator, Taskbar.TaskListLabeledButtonPanel@RunningIndicatorStates > Rectangle#RunningIndicator
+    styles:
+      - Fill@ActiveRunningIndicator=#a7c080
+      - Fill@InactiveRunningIndicator=#859289
+      - Fill@RequestingAttentionRunningIndicator=#e67e80
+  # 系统托盘悬浮背景（亚克力底板已模糊，这里改成透明以免盖住底板；保留上边框细线）
+  - target: StackPanel#SystemTrayFrameGrid
+    styles:
+      - Background=Transparent
+      - BorderBrush=#374145
+      - BorderThickness=0,1,0,0
+      - Margin=0
+  - target: Grid#SystemTrayFrameGrid
+    styles:
+      - Background=Transparent
+      - BorderBrush=#374145
+      - BorderThickness=0,1,0,0
+      - Margin=0
+  # 托盘溢出 flyout 背景（玻璃）
+  - target: Border#OverflowFlyoutBackgroundBorder
+    styles:
+      - Background:=<WindhawkBlur BlurAmount="20" TintColor="#272e33" TintOpacity="0.72" FallbackColor="#272e33"/>

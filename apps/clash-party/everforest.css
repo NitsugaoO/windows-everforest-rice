@@ -1,0 +1,179 @@
+/* Everforest */
+/* Everforest Hard for Clash Party — 由 generator/gen_clash_party.py 生成，勿手改 */
+
+/* 强制使用 Everforest 暗色：浅色模式下也套同一套变量，避免半深半浅 */
+.dark,
+[data-theme="dark"],
+.light,
+[data-theme="light"] {
+  color-scheme: dark !important;
+
+  /* 基础背景 / 文字 */
+  --heroui-background: 205.00 13.33% 17.65% !important;
+  --heroui-foreground: 40.98 31.78% 74.71% !important;
+  --heroui-focus: 83.44 33.68% 62.75% !important;
+  --heroui-overlay: 202.50 11.76% 13.33% !important;
+  --heroui-divider: 40.98 31.78% 74.71% !important;
+  --heroui-divider-opacity: 0.12 !important;
+  --heroui-divider-weight: 1px !important;
+
+  /* foreground 灰阶 */
+  --heroui-foreground-50: 197.14 11.29% 24.31% !important;
+  --heroui-foreground-100: 200.00 10.34% 28.43% !important;
+  --heroui-foreground-200: 203.08 8.18% 31.18% !important;
+  --heroui-foreground-300: 200.00 8.20% 35.88% !important;
+  --heroui-foreground-400: 110.00 4.76% 49.41% !important;
+  --heroui-foreground-500: 138.46 5.63% 54.71% !important;
+  --heroui-foreground-600: 135.00 6.52% 63.92% !important;
+  --heroui-foreground-700: 40.36 31.79% 66.08% !important;
+  --heroui-foreground-800: 41.25 32.00% 70.59% !important;
+  --heroui-foreground-900: 40.98 31.78% 74.71% !important;
+
+  /* default 灰阶 */
+  --heroui-default-50: 205.00 13.33% 17.65% !important;
+  --heroui-default-100: 197.14 13.21% 20.78% !important;
+  --heroui-default-200: 197.14 11.29% 24.31% !important;
+  --heroui-default-300: 200.00 10.34% 28.43% !important;
+  --heroui-default-400: 203.08 8.18% 31.18% !important;
+  --heroui-default-500: 200.00 8.20% 35.88% !important;
+  --heroui-default-600: 110.00 4.76% 49.41% !important;
+  --heroui-default-700: 138.46 5.63% 54.71% !important;
+  --heroui-default-800: 135.00 6.52% 63.92% !important;
+  --heroui-default-900: 40.98 31.78% 74.71% !important;
+
+  --heroui-default: 197.14 11.29% 24.31% !important;
+  --heroui-default-foreground: 40.98 31.78% 74.71% !important;
+
+  --heroui-content1: 197.14 13.21% 20.78% !important;
+  --heroui-content1-foreground: 40.98 31.78% 74.71% !important;
+  --heroui-content2: 197.14 11.29% 24.31% !important;
+  --heroui-content2-foreground: 40.98 31.78% 74.71% !important;
+  --heroui-content3: 200.00 10.34% 28.43% !important;
+  --heroui-content3-foreground: 40.98 31.78% 74.71% !important;
+  --heroui-content4: 203.08 8.18% 31.18% !important;
+  --heroui-content4-foreground: 40.98 31.78% 74.71% !important;
+
+  /* primary: 500=主色，50 最暗，900 最亮 */
+  --heroui-primary-50: 83.44 33.68% 10.04% !important;
+  --heroui-primary-100: 83.44 33.68% 17.57% !important;
+  --heroui-primary-200: 83.44 33.68% 25.10% !important;
+  --heroui-primary-300: 83.44 33.68% 34.51% !important;
+  --heroui-primary-400: 83.44 33.68% 48.94% !important;
+  --heroui-primary-500: 83.44 33.68% 62.75% !important;
+  --heroui-primary-600: 83.44 33.68% 69.75% !important;
+  --heroui-primary-700: 83.44 33.68% 76.75% !important;
+  --heroui-primary-800: 83.44 33.68% 83.75% !important;
+  --heroui-primary-900: 83.44 33.68% 90.75% !important;
+  --heroui-primary: 83.44 33.68% 62.75% !important;
+  --heroui-primary-foreground: 205.71 13.46% 20.39% !important;
+
+  /* secondary: 500=主色，50 最暗，900 最亮 */
+  --heroui-secondary-50: 134.75 32.62% 10.13% !important;
+  --heroui-secondary-100: 134.75 32.62% 17.73% !important;
+  --heroui-secondary-200: 134.75 32.62% 25.33% !important;
+  --heroui-secondary-300: 134.75 32.62% 34.83% !important;
+  --heroui-secondary-400: 134.75 32.62% 49.40% !important;
+  --heroui-secondary-500: 134.75 32.62% 63.33% !important;
+  --heroui-secondary-600: 134.75 32.62% 70.33% !important;
+  --heroui-secondary-700: 134.75 32.62% 77.33% !important;
+  --heroui-secondary-800: 134.75 32.62% 84.33% !important;
+  --heroui-secondary-900: 134.75 32.62% 91.33% !important;
+  --heroui-secondary: 134.75 32.62% 63.33% !important;
+  --heroui-secondary-foreground: 205.00 13.33% 17.65% !important;
+
+  /* success: 500=主色，50 最暗，900 最亮 */
+  --heroui-success-50: 134.75 32.62% 10.13% !important;
+  --heroui-success-100: 134.75 32.62% 17.73% !important;
+  --heroui-success-200: 134.75 32.62% 25.33% !important;
+  --heroui-success-300: 134.75 32.62% 34.83% !important;
+  --heroui-success-400: 134.75 32.62% 49.40% !important;
+  --heroui-success-500: 134.75 32.62% 63.33% !important;
+  --heroui-success-600: 134.75 32.62% 70.33% !important;
+  --heroui-success-700: 134.75 32.62% 77.33% !important;
+  --heroui-success-800: 134.75 32.62% 84.33% !important;
+  --heroui-success-900: 134.75 32.62% 91.33% !important;
+  --heroui-success: 134.75 32.62% 63.33% !important;
+  --heroui-success-foreground: 205.00 13.33% 17.65% !important;
+
+  /* warning: 500=主色，50 最暗，900 最亮 */
+  --heroui-warning-50: 39.78 56.10% 10.85% !important;
+  --heroui-warning-100: 39.78 56.10% 19.00% !important;
+  --heroui-warning-200: 39.78 56.10% 27.14% !important;
+  --heroui-warning-300: 39.78 56.10% 37.31% !important;
+  --heroui-warning-400: 39.78 56.10% 52.92% !important;
+  --heroui-warning-500: 39.78 56.10% 67.84% !important;
+  --heroui-warning-600: 39.78 56.10% 74.84% !important;
+  --heroui-warning-700: 39.78 56.10% 81.84% !important;
+  --heroui-warning-800: 39.78 56.10% 88.84% !important;
+  --heroui-warning-900: 39.78 56.10% 95.84% !important;
+  --heroui-warning: 39.78 56.10% 67.84% !important;
+  --heroui-warning-foreground: 205.00 13.33% 17.65% !important;
+
+  /* danger: 500=主色，50 最暗，900 最亮 */
+  --heroui-danger-50: 358.85 67.53% 11.17% !important;
+  --heroui-danger-100: 358.85 67.53% 19.55% !important;
+  --heroui-danger-200: 358.85 67.53% 27.92% !important;
+  --heroui-danger-300: 358.85 67.53% 38.39% !important;
+  --heroui-danger-400: 358.85 67.53% 54.45% !important;
+  --heroui-danger-500: 358.85 67.53% 69.80% !important;
+  --heroui-danger-600: 358.85 67.53% 76.80% !important;
+  --heroui-danger-700: 358.85 67.53% 83.80% !important;
+  --heroui-danger-800: 358.85 67.53% 90.80% !important;
+  --heroui-danger-900: 358.85 67.53% 97.80% !important;
+  --heroui-danger: 358.85 67.53% 69.80% !important;
+  --heroui-danger-foreground: 205.00 13.33% 17.65% !important;
+
+  /* 圆角 / 字号 / 阴影：沿用 HeroUI 默认，阴影改成中性黑 */
+  --heroui-disabled-opacity: 0.45 !important;
+  --heroui-font-size-tiny: 0.75rem !important;
+  --heroui-font-size-small: 0.875rem !important;
+  --heroui-font-size-medium: 1rem !important;
+  --heroui-font-size-large: 1.125rem !important;
+  --heroui-line-height-tiny: 1rem !important;
+  --heroui-line-height-small: 1.25rem !important;
+  --heroui-line-height-medium: 1.5rem !important;
+  --heroui-line-height-large: 1.75rem !important;
+  --heroui-radius-small: 8px !important;
+  --heroui-radius-medium: 12px !important;
+  --heroui-radius-large: 14px !important;
+  --heroui-border-width-small: 1px !important;
+  --heroui-border-width-medium: 2px !important;
+  --heroui-border-width-large: 3px !important;
+  --heroui-box-shadow-small: 0 2px 8px rgba(0, 0, 0, 0.28), inset 0 0 1px rgba(211, 198, 170, 0.10) !important;
+  --heroui-box-shadow-medium: 0 4px 18px rgba(0, 0, 0, 0.32), inset 0 0 1px rgba(211, 198, 170, 0.10) !important;
+  --heroui-box-shadow-large: 0 16px 40px rgba(0, 0, 0, 0.40), inset 0 0 1px rgba(211, 198, 170, 0.12) !important;
+  --heroui-hover-opacity: 0.85 !important;
+}
+
+/* ---------- 细节：选区 / 滚动条 / 侧栏分层 ---------- */
+
+::selection {
+  background-color: hsl(var(--heroui-primary) / 0.28) !important;
+  color: hsl(var(--heroui-foreground)) !important;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--heroui-default-300));
+  border: 2px solid hsl(var(--heroui-background));
+  border-radius: var(--heroui-radius-small);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--heroui-default-400));
+}
+
+/* 侧栏与 VSCode 一样比主区域深一档 */
+.side {
+  background-color: hsl(var(--heroui-content1)) !important;
+  border-right: 1px solid hsl(var(--heroui-divider) / 0.10) !important;
+}
+

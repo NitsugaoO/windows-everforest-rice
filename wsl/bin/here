@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# here — 在 Windows 资源管理器里打开 WSL 的当前目录
+#
+#   here              # 打开当前目录
+#   here <dir>        # 打开指定目录
+#   here <file>       # 打开所在目录并选中该文件
+#   here -n [path]    # 强制开新窗口
+#
+# 权威源：my_dot/dotfiles/wsl/bin/here
+# 改完跑 my_dot\sync-dotfiles.ps1 部署到 ~/.local/bin/here。
+set -euo pipefail
+
+die() { printf 'here: %s\n' "$*" >&2; exit 1; }
+
+usage() {
+  cat <<'EOF'
+用法:
+  here               在资源管理器里打开当前目录
+  here <dir>         打开指定目录
+  here <file>        打开所在目录并选中该文件
+  here -n [path]     强制开新窗口（默认按系统的“在同一窗口打开”设置）
+  here -h | --help   显示本帮助
+
+说明:
+  WSL 内的路径会转成 \\wsl.localhost\<发行版>\... 打开；
+  /mnt/c 下的路径则直接是 C:\... —— 两种都由 wslpath 自动换算。
+EOF
+}
+
+new_window=false
+case "${1:-}" in
+  -h|--help) usage; exit 0 ;;
+  -n|--new)  new_window=true; shift ;;
+  --)        shift ;;
+esac
+
+[ $# -le 1 ] || die "最多接受一个路径参数（收到 $# 个）"
+
+target=${1:-.}
+[ -e "$target" ] || die "路径不存在或无法访问: $target（若是 /mnt/c 下的路径，先确认 DrvFs 挂载没坏，见 wsl/README.md 的「故障排除」）"
+abs=$(realpath -- "$target")
+win=$(wslpath -w -- "$abs")
+
+# explorer 的参数语法：/n,<目录> 开新窗口；/select,<文件> 打开所在目录并高亮该文件
+if [ -d "$abs" ]; then
+  if $new_window; then arg="/n,$win"; else arg="$win"; fi
+else
+  arg="/select,$win"
+fi
+
+# explorer.exe 只是把请求转交给已在运行的 explorer 进程，自己立刻退出 ——
+# 所以它不会像 GUI 程序那样占住终端（成功时也返回 1，退出码不能当错误看）。
+# timeout 纯属兜底；它触发时会 kill 正在跑的 explorer.exe，别按 Ctrl+C
+# （在 /mnt/c 上被中断的 I/O 会让 DrvFs 挂载失效）。
+timeout 30 explorer.exe "$arg" </dev/null >/dev/null 2>&1 || true
