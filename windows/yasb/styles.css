@@ -6,7 +6,11 @@
 
 /* Root Variables */
 :root {
-    --yasb-bar-bg: rgba(39, 46, 51, 0.72);   /* 半透明：配合 Windhawk translucent-windows 的模糊 */
+    /* bar 背景：只留一点点底色，模糊和主要色调由 translucent-windows 的 DWM 层负责
+       （两层都叠 0.72 会算出 ~0.92 的有效暗度 —— 这就是它比开始菜单/WT 更"灰"的原因）*/
+    --yasb-bar-bg: rgba(39, 46, 51, 0.50);
+    /* 弹出菜单：它是独立窗口，同样吃 DWM 模糊，但需要更实才看得清文字 */
+    --yasb-menu-bg: rgba(39, 46, 51, 0.85);
     --yasb-surface-alt: #2e383c;
     --yasb-bar-border: #374145;
     --yasb-popup-bg: #272e33;
@@ -76,7 +80,7 @@
 /* Context Menu */
 .context-menu,
 .context-menu .menu-checkbox {
-    background-color: var(--yasb-bar-bg);
+    background-color: var(--yasb-menu-bg);
     border-bottom: 1px solid var(--yasb-bar-border);
     padding: 4px 0px;
     font-family: var(--system-font);

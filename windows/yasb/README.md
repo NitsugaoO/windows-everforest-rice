@@ -1,41 +1,34 @@
 # yasb 状态栏配置
 
-yasb 的布局与自定义 widget，加上从 Everforest 色板渲染出的 `styles.css`。
-
-> 本仓库是 **只读发布镜像**：`config.yaml`/`scripts/` 的权威源在上游私有仓库 `my_dot`，
-> `styles.css` 的权威源在上游 `everforest-themes` 的生成器（色板见 `palette/tokens.yaml`）。
+yasb 的布局与自定义 widget。配色由 `everforest-themes` 生成，**本目录只管行为**。
 
 ## 文件
 
 | 文件 | 说明 |
 | --- | --- |
-| `config.yaml` | 布局与 widget 定义（含各组件状态色阈值） |
+| `config.yaml` | 布局与 widget 定义（权威源，含各组件状态色阈值） |
 | `scripts/obs_status.py` | 查询 OBS 录制状态，供状态栏每秒轮询 |
 | `scripts/obs_action.py` | 点击动作：开始录制 / 暂停恢复 / 停止并打开录像目录 |
 | `patches/status_icons.py` | **注入 yasb 的 widget 子类**：让 CPU/GPU/内存/WiFi 的**图标**按状态变色 |
 | `patches/install_patches.py` | 把上面的模块注入 `lib/library.zip`（**升级 yasb 后要重放**） |
 
-> ⚠️ `styles.css` 是**生成产物**，勿手改。它由上游 `everforest-themes` 的生成器
-> 从 `palette/tokens.yaml` 渲染（模板只写 `{{角色名}}`），本仓库只放成品。
-> 要改配色请改 [`palette/tokens.yaml`](../../palette/tokens.yaml) 后重新渲染。
+> ⚠️ `styles.css` **不归本目录管**。它由 `everforest-themes`（`%USERPROFILE%\Themes`）的
+> `tokens/generate.py` 从 `tokens/templates/yasb_styles.css` 渲染后**直接写入**
+> `~\.config\yasb\styles.css`。要改配色请去那个仓库改 `tokens.yaml`。
 
 ## 部署
 
-复制到 yasb 的配置目录：
-
 ```powershell
-$dst = "$env:USERPROFILE\.config\yasb"
-New-Item -ItemType Directory -Path "$dst\scripts" -Force | Out-Null
-Copy-Item config.yaml, styles.css $dst -Force
-Copy-Item scripts\* $dst\scripts -Force
+cd %USERPROFILE%\Projects\windows-everforest-rice
+.\sync-dotfiles.ps1
 ```
 
-yasb 开了 `watch_config`，改 `config.yaml` 会自动重载；
-**但 `styles.css` 被脚本整体覆写后不会触发 `watch_stylesheet` 热加载，必须重启 yasb 进程**
-（`Stop-Process -Name yasb; Start-Process <scoop shims>\yasb.exe`）。
+`config.yaml` → `~\.config\yasb\config.yaml`；`scripts\` → `~\.config\yasb\scripts\`。
+yasb 开了 `watch_config`，改完自动重载。
 
-> ⚠️ 上面的部署**不包含** `patches/` 的注入（那一步要写进 yasb 的安装包，见下一节）。
-> 升级 yasb 后需要重放一次：`python patches\install_patches.py`。
+> ⚠️ 部署脚本**不包含** `patches/` 的注入（那一步要写进 yasb 的安装包，见下一节），
+> 但它会在末尾自动跑一次 `install_patches.py --check`：补丁缺失或过期时会以醒目的
+> 提示给出重放命令。
 
 ## 状态色（图标变色）
 
@@ -48,8 +41,8 @@ yasb 开了 `watch_config`，改 `config.yaml` 会自动重载；
 | WiFi | 有网 / 有连接但无外网 / 无连接（关 WiFi） | 绿 / 红 / 灰 |
 | 音量 | 正常 / 静音或无设备 | 米白 / 灰 |
 
-颜色本身来自 `palette/tokens.yaml` 的 `status/*` 语义角色，CSS 规则在 `styles.css`
-末尾的「负载状态色阶」一节 —— **要改配色改 tokens 后重新渲染**。
+颜色本身来自 `everforest-themes` 的 `status/*` 语义角色（`tokens.yaml`），CSS 规则在
+`tokens/templates/yasb_styles.css` 末尾的「负载状态色阶」一节 —— **要改配色去那个仓库**。
 
 ### 为什么要注入补丁
 
@@ -77,14 +70,14 @@ yasb 用 cx_Freeze 打包，`core.*` 全在 `lib/library.zip` 里，而 `WidgetB
 `core.widgets.*` 导入 widget，所以补丁必须写进这个 zip：
 
 ```powershell
-python %USERPROFILE%\Projects\windows-everforest-rice\windows\yasb\patches\install_patches.py
+python %USERPROFILE%\Projects\windows-everforest-rice\yasb\patches\install_patches.py
 python ...\install_patches.py --check      # 只查状态
 python ...\install_patches.py --restore    # 还原原始 zip
 python ...\install_patches.py --clean      # 去除重复条目（需先退出 yasb）
 ```
 
 不带参数就是注入（幂等）；`--check` 的退出码：`0` 正常 / `1` 缺失或过期，
-可以拿它做部署后的自检。
+`sync-dotfiles.ps1` 就是靠这个退出码来判断是否提醒你重放的。
 
 - **scoop 升级 yasb 后必须重跑**（新版本目录里没有补丁，`type` 会指向不存在的模块）。
 - 首次运行会把原包备份成同目录的 `library.zip.orig-backup`。

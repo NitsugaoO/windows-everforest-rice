@@ -1,6 +1,6 @@
 # wsl
 
-给 WSL（`Ubuntu-24.04`）用的小命令，部署到 WSL 内的 `~/.local/bin/`（上游私有仓库 `my_dot` 的发布镜像）。
+给 WSL（`Ubuntu-24.04`）用的小命令。**权威源在这里**，部署到 WSL 内的 `~/.local/bin/`。
 
 | 文件 | 作用 |
 | --- | --- |
@@ -11,22 +11,17 @@
 
 ## 部署
 
-在 WSL 里执行（用 `install` 而不是 `cp`，见下）：
-
-```bash
-cd /mnt/c/Users/<YourName>/Projects/windows-everforest-rice/wsl
-install -D -m 755 bin/ida   ~/.local/bin/ida
-install -D -m 755 bin/here  ~/.local/bin/here
-install -D -m 644 gdb/gdbinit            ~/.gdbinit
-install -D -m 644 gdb/pwndbg-ctx-split.gdb ~/.gdbinit.d/pwndbg-ctx-split.gdb
-install -D -m 755 gdb/pane.sh            ~/.gdb-ctx/pane.sh
-install -D -m 644 tmux/tmux.conf         ~/.tmux.conf
+```powershell
+cd %USERPROFILE%\Projects\windows-everforest-rice
+.\sync-dotfiles.ps1            # 部署（-WhatIf 可预演）
 ```
 
-为什么用 `install` 而不是 `cp`：从 Windows 侧写 `\\wsl.localhost\...` 会把**可执行位丢掉**，
-写过去是个 644 的脚本，跑起来报 `ida: command not found` 或 `Permission denied`。
-`install -m 755` 一次到位。
+WSL 那段用 `wsl.exe -- install -m 755 -D <源> <目标>`，而不是 `Copy-Item` 直接写
+`\\wsl.localhost\...` —— 后者会把**可执行位丢掉**，写过去是个 644 的脚本，`ida: command not found` 或
+`Permission denied`。用 `install` 一次到位。
 
+- 发行版名写死在脚本顶部的 `$wslDistro`；家目录由 `wsl.exe -- sh -c 'echo $HOME'` 自动探测，换用户名不用改
+- 源路径用 `ConvertTo-WslPath` 从 `C:\...` 换算成 `/mnt/c/...`
 - 改完不需要热重载，新开一个 shell（或 `hash -r`）即可
 
 ⚠ `gdb/gdbinit` 会**整体覆盖** `~/.gdbinit`（它是权威源）。它只做三件事：source pwndbg、

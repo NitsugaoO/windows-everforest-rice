@@ -18,15 +18,14 @@
 
 | Windhawk 角色 | Everforest token | hex |
 |---|---|---|
-| 任务栏底板背景 `Rectangle#BackgroundFill` | `bg0` | `#272e33` |
-| 任务栏边框 `Rectangle#BackgroundStroke` | `bg2` | `#374145` |
-| 缩略图/悬浮 `HoverFlyoutBackgroundControl` | `bg0` | `#272e33` |
-| 任务列表按钮背景 `Border#BackgroundElement` | `bg0` | `#272e33` |
-| 任务栏按钮文字 `TextBlock#LabelControl` | `fg` | `#d3c6aa` |
-| 运行指示条(active/inactive) | `green`/`grey0` | `#a7c080` / `#7a8478` |
-| 运行指示条(需关注) | `red` | `#e67e80` |
-| 系统托盘悬浮 `SystemTrayFrameGrid` | `bg0` | `#272e33` |
-| 托盘溢出 `OverflowFlyoutBackgroundBorder` | `bg0` | `#272e33` |
+| 底板 / 缩略图 flyout / 托盘溢出（玻璃） | `bg0`｜背景 | `#272e33` |
+| 底板描边 / 托盘上边细线 | `bg2`｜浮层 | `#374145` |
+| 运行指示条 active / inactive / 需要关注 | `green` / `grey1` / `red` | `#a7c080` / `#859289` / `#e67e80` |
+
+> 2026-11 精简重做：只保留「背景 + 透明 + 描边」，**唯一的功能色是运行指示条**
+> （删掉会回落到系统 accent 蓝）。圆角 / 任务名文字色 / 按钮背景 / 悬停特效
+> 均已交回系统默认（旧版见 git 历史）。`AcrylicBrush` + `TintOpacity=0.45` + 亮度层 `0.6`、描边 `#374145`
+> 与 YASB 状态栏对齐，理由见 [`../Notification/README.md`](../Notification/README.md)。
 
 ## 说明
 

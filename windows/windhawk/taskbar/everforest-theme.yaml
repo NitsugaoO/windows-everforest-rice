@@ -1,63 +1,40 @@
 # Everforest (High Contrast / hard, dark) theme for Windows 11 Taskbar Styler
-# AUTO-GENERATED from palette/tokens.yaml（上游 everforest-themes 仓库） — 不要手改，改 tokens 后重跑生成器
+# AUTO-GENERATED from Themes/themes/everforest/tokens.yaml — 不要手改，改 tokens 后跑 generate.py
 # Based on sainnhe/everforest, hard/contrast = High, dark background.
 # Import: Windhawk > Windows 11 Taskbar Styler > Settings > "Textual mode" > paste this.
-
+#
+# 范围（2026-11 定稿）：只做「背景色 + 透明化 + 描边」三件事。
+#   圆角 / 任务名文字色 / 悬停特效 / 按钮背景 —— 全部交回系统默认。
+#   唯一保留的额外一条是「运行指示条」三态绿（用户的明确要求，见末尾）。
+#
+# 参数与 YASB 状态栏对齐（说明见 src/notification.yaml 顶部）：
+#   背景 #272e33 + Tint 0.45 + 亮度层 0.6（WindhawkBlur 不是系统亚克力，补参数见 src/notification.yaml）
+#   描边 #374145（= 角色「浮层」，与 yasb 的 border-bottom 同色）
+styleConstants:
+  # 玻璃画刷：底板 / 缩略图 flyout / 托盘溢出 共用这一个。
+  # （曾试过让 explorer.exe 的 SystemBackdrop 接管底板，对 Shell_TrayWnd 无效）
+  - GlassBrush=<AcrylicBrush TintColor="#272e33" TintOpacity="0.45" TintLuminosityOpacity="0.6" FallbackColor="#272e33"/>
 controlStyles:
   # 任务栏底板背景（亚克力）
+  # 由本文件的 $GlassBrush 负责：explorer.exe + acrylicsystem 实测对 Shell_TrayWnd 无效。
   # WindhawkBlur 是 mod 自带的模糊实现，不依赖系统 AcrylicBrush（后者在多显示器上有已知问题）。
-  # TintColor 跟随角色表；TintOpacity 0=全透 1=实色（0.72 保住 Everforest 暖色，不被壁纸带偏）。
   - target: Taskbar.TaskbarFrame > Grid#RootGrid > Taskbar.TaskbarBackground > Grid > Rectangle#BackgroundFill
     styles:
-      - Fill:=<WindhawkBlur BlurAmount="20" TintColor="#272e33" TintOpacity="0.72" FallbackColor="#272e33"/>
-  # 任务栏边框（浮层）
+      - Fill:=$GlassBrush
+  # 任务栏描边（顶部那条细线）
   - target: Rectangle#BackgroundStroke
     styles:
       - Fill=#374145
-  # 缩略图 / 悬浮 flyout 背景（玻璃：与底板同一套参数）
+  # 缩略图 / 悬浮 flyout 背景（与底板同一套玻璃参数）
   - target: Taskbar.TaskbarBackground#HoverFlyoutBackgroundControl > Grid > Rectangle#BackgroundFill
     styles:
-      - Fill:=<WindhawkBlur BlurAmount="20" TintColor="#272e33" TintOpacity="0.72" FallbackColor="#272e33"/>
-  # 任务列表按钮：不要实色底，改成「只在交互时出现」的细边框（让玻璃透出来）
-  # 状态组挂在父元素上（@CommonStates），否则属性会对所有状态生效 = 永远实色
-  # 应用按钮：不再自定义悬停效果 —— 直接用系统默认（与「开始按钮」完全同一套
-  # 系统画刷 + 系统过渡动画），这里只留圆角保持一致。
-  #
-  # 历史：曾在这里铺过 #1A/#4D/#66 的浮层底 + 草绿边框，虽然解决了“被图标盖住 /
-  # 闪一下消失”，但系统默认的悬停观感更好，故全部撤掉。
-  - target: Grid#IconPanel > Border#BackgroundElement, Taskbar.TaskListLabeledButtonPanel > Border#BackgroundElement
+      - Fill:=$GlassBrush
+  # 托盘溢出 flyout 背景
+  - target: Border#OverflowFlyoutBackgroundBorder
     styles:
-      - CornerRadius=6
-  # 任务列表按钮圆角
-  - target: Taskbar.ExperienceToggleButton
-    styles:
-      - CornerRadius=6
-  - target: Taskbar.SearchBoxButton
-    styles:
-      - CornerRadius=6
-  - target: Taskbar.TaskListButton
-    styles:
-      - CornerRadius=6
-  # 任务列表文字——ui 三态（任务栏状态名带 Active/Inactive 前缀）
-  # 未激活(未选中):灰 → 未激活+悬停:亮灰 → 激活(选中):米白
-  # fallback：状态规则不匹配时的默认色
-  - target: TextBlock#LabelControl
-    styles:
-      - Foreground=#859289
-  # 三态规则：@CommonStates 视觉状态 + 状态化前景色（官方 WinXP 主题同款写法）
-  - target: Taskbar.TaskListLabeledButtonPanel@CommonStates > TextBlock#LabelControl
-    styles:
-      - Foreground@InactiveNormal=#7a8478
-      - Foreground@InactivePointerOver=#859289
-      - Foreground@ActiveNormal=#d3c6aa
-      - Foreground@ActivePointerOver=#d3c6aa
-  # 运行指示条（Everforest green）
-  - target: Grid#IconPanel@RunningIndicatorStates > Rectangle#RunningIndicator, Taskbar.TaskListLabeledButtonPanel@RunningIndicatorStates > Rectangle#RunningIndicator
-    styles:
-      - Fill@ActiveRunningIndicator=#a7c080
-      - Fill@InactiveRunningIndicator=#859289
-      - Fill@RequestingAttentionRunningIndicator=#e67e80
-  # 系统托盘悬浮背景（亚克力底板已模糊，这里改成透明以免盖住底板；保留上边框细线）
+      - Background:=$GlassBrush
+  # 系统托盘悬浮区：底板已经模糊过，这里必须透明，否则会在玻璃上再盖一层实色；
+  # 只保留上边框细线（属于「描边」的一部分）。
   - target: StackPanel#SystemTrayFrameGrid
     styles:
       - Background=Transparent
@@ -70,7 +47,10 @@ controlStyles:
       - BorderBrush=#374145
       - BorderThickness=0,1,0,0
       - Margin=0
-  # 托盘溢出 flyout 背景（玻璃）
-  - target: Border#OverflowFlyoutBackgroundBorder
+  # 运行指示条（Everforest green）—— 唯一保留的功能色。
+  # 删掉会回落到系统 accent 蓝，与整体配色打架，所以按用户要求保留三态。
+  - target: Grid#IconPanel@RunningIndicatorStates > Rectangle#RunningIndicator, Taskbar.TaskListLabeledButtonPanel@RunningIndicatorStates > Rectangle#RunningIndicator
     styles:
-      - Background:=<WindhawkBlur BlurAmount="20" TintColor="#272e33" TintOpacity="0.72" FallbackColor="#272e33"/>
+      - Fill@ActiveRunningIndicator=#a7c080
+      - Fill@InactiveRunningIndicator=#859289
+      - Fill@RequestingAttentionRunningIndicator=#e67e80

@@ -9,7 +9,4 @@
 ' Run 的第二个参数 0 = 隐藏窗口,第三个参数 False = 不等待。
 
 Set sh = CreateObject("WScript.Shell")
-' 路径默认按 scoop 安装位置拼；不是 scoop 装的就把下面一行换成 glazewm.exe 的绝对路径。
-' 注意：这里必须用 ExpandEnvironmentStrings，WScript.Shell.Run 不会自己展开 %USERPROFILE%。
-exe = sh.ExpandEnvironmentStrings("%USERPROFILE%\scoop\apps\glazewm\current\glazewm.exe")
-sh.Run """" & exe & """", 0, False
+sh.Run """C:\Users\<YourName>\scoop\apps\glazewm\current\glazewm.exe""", 0, False

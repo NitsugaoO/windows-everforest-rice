@@ -3,21 +3,27 @@
 Clash Party 的单文件 CSS 主题，配色取自 Everforest Hard（与 VSCode / Neovim 主题同一色板）。
 
 ```
-apps/clash-party/
-└── everforest.css     ← 生成产物，勿手改（由上游 everforest-themes 的 generator/gen_clash_party.py 渲染）
+ClashParty/
+└── everforest.css     ← 生成产物，勿手改
 ```
 
 ## 安装
 
-本仓库直接提供成品 css，复制到 Clash Party 的主题目录：
+```bash
+cd %USERPROFILE%\Themes
+python generator/gen_clash_party.py
+```
 
-```powershell
-Copy-Item everforest.css "$env:APPDATA\mihomo-party\themes\everforest.css" -Force
+脚本会把 `everforest.css` 复制到 Clash Party 的主题目录：
+
+```
+%APPDATA%\mihomo-party\themes\everforest.css
 ```
 
 然后打开 Clash Party → 设置 → 外观 / 主题 → 选择 **Everforest**。
 
-也可以手动安装：在设置里用“导入主题”直接选中本仓库的 `everforest.css`。
+也可以手动安装：把 `everforest.css` 复制到上面的 `themes` 目录
+（或使用设置里的“导入主题”选择该文件）。
 
 ## 机制
 

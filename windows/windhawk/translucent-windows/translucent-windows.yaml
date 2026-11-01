@@ -1,24 +1,36 @@
-# Windhawk · Translucent Windows —— 只给 yasb 状态栏开玻璃
+# Windhawk · Translucent Windows —— 给指定程序开玻璃
 # Import: Windhawk > Translucent Windows > Settings > "Textual mode" > paste this
 #
 # 要点：
 #   1. 全局三项全关（RenderingMod / BackgroundEffects / FlyoutsEffects），
 #      否则这个 mod 会对所有窗口生效。
-#   2. 只留 yasb.exe 一条进程规则 —— 源码里 RuledPrograms[i].BackgroundEffects
-#      是独立设置，因此能做到「只有状态栏有玻璃」。
-#   3. AccentBlurBehind 是 ARGB（无 #）：B8 = 72% 透明度，与 yasb CSS 里
-#      --yasb-bar-bg 的 0.72 对应；颜色随角色表「背景」变化。
-#   4. 若 acrylicblur 无效（yasb 窗口是 WS_EX_LAYERED），把 type 换成 acrylicsystem。
+#   2. 只列需要玻璃的进程 —— 源码里 RuledPrograms[i].BackgroundEffects 是独立设置，
+#      因此能做到「只有这几个程序有玻璃」。mod 本身是 `@include *`，靠这张表收窄。
+#      注意：规则只能按「进程名 / 路径 / 子目录」匹配，**不支持窗口类**。
+#   3. AccentBlurBehind 是 ARGB（无 #）：73 = 45%，与其它面板 AcrylicBrush 的
+#      TintOpacity 0.45 对齐；颜色随角色表「背景」。
+#      （原本是 B8=72%，与 yasb CSS 的 0.72 叠成 ~92% 有效暗度 → 明显比别处灰。）
+#      ⚠️ 值必须加引号：以数字开头的 ARGB（如 73xxxxxx）会被 YAML 当成
+#         科学计数法数字（73272e33 = 7.3e34），Windhawk 会报
+#         "expected string, but got number"。
+#
+# ⚠️ 试过但当前系统上失败的两条（2026-11，build 26200）：
+#   - StartMenuExperienceHost.exe + acrylicsystem：DWM 不给这个窗口提供 SystemBackdrop，
+#     styler 把背景设 Transparent 后开始菜单直接「没有背景」（全透到桌面、无模糊）。
+#   - explorer.exe + acrylicsystem：任务栏（Shell_TrayWnd）同理；而且规则只能按进程
+#     匹配，会连带桌面和文件管理器窗口，风险大于收益。
+#   → 结论：任务栏 / 开始菜单的玻璃继续由 styler 的 WindhawkBlur 负责（见 src/taskbar.yaml）。
 RenderingMod:
   ThemeBackground: 0
   SysColors: 0
   AccentColorControls: 0
 BackgroundEffects:
   type: none
-  AccentBlurBehind: B8272e33
+  AccentBlurBehind: "73272e33"
 FlyoutsEffects: 0
 RuledPrograms:
+  # yasb 状态栏：透明链路的第一层（第二层是 styles.css 里的 rgba 背景）
   - target: yasb.exe
     BackgroundEffects:
       type: acrylicblur
-      AccentBlurBehind: B8272e33
+      AccentBlurBehind: "73272e33"

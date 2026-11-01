@@ -43,6 +43,12 @@ $fromThemes = @(
     @{ S = 'themes\everforest\Taskbar\everforest-theme.yaml';        D = 'windows\windhawk\taskbar\everforest-theme.yaml' }
     @{ S = 'themes\everforest\Taskbar\README.md';                    D = 'windows\windhawk\taskbar\README.md' }
 
+    @{ S = 'themes\everforest\Notification\everforest-theme.yaml';   D = 'windows\windhawk\notification\everforest-theme.yaml' }
+    @{ S = 'themes\everforest\Notification\README.md';               D = 'windows\windhawk\notification\README.md' }
+
+    @{ S = 'themes\everforest\Terminal\windows-terminal.json';       D = 'windows\terminal\windows-terminal.json' }
+    @{ S = 'themes\everforest\Terminal\README.md';                   D = 'windows\terminal\README.md' }
+
     @{ S = 'themes\everforest\Explorer\everforest-theme.yaml';       D = 'windows\windhawk\explorer\everforest-theme.yaml' }
     @{ S = 'themes\everforest\Explorer\README.md';                   D = 'windows\windhawk\explorer\README.md' }
 

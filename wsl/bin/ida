@@ -47,8 +47,7 @@ copy_root() {
   if [ -n "$win" ]; then
     printf '%s/Temp/ida-wsl' "$(wslpath -u -- "$win")"
   else
-    # 拿不到 Windows 侧路径就落在 WSL 自己的临时目录（本脚本只用它做--copy 的中转）
-    printf '%s' "${TMPDIR:-/tmp}/ida-wsl"
+    printf '%s' '/mnt/c/Users/<YourName>/AppData/Local/Temp/ida-wsl'
   fi
 }
 

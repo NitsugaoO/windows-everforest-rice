@@ -17,10 +17,14 @@ code --install-extension everforest-hard-1.0.0.vsix
 
 ## 重新生成
 
-`themes/everforest-hard-dark.json` 是生成产物，色值唯一权威是
-[`palette/tokens.yaml`](../../palette/tokens.yaml)。生成器（上游 `everforest-themes`
-仓库的 `generator/gen_vscode.py`）目前未公开；改色后按 tokens 的 19 个角色重新渲染，
-再重新打包安装即可。仓库里同时提供了打包好的 `everforest-hard-1.0.0.vsix`。
+改色板后：
+
+```bash
+cd %USERPROFILE%\Themes\tokens
+python gen_vscode.py
+```
+
+生成到 `extensions/everforest-hard/themes/`，重装扩展生效。
 
 ## 许可
 

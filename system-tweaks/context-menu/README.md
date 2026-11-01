@@ -71,27 +71,14 @@ Remove-Item -Recurse 'HKCU:\Software\Classes\Directory\shell\RunPiHere'
 Remove-Item -Recurse 'HKCU:\Software\Classes\Drive\shell\RunPiHere'
 ```
 
-## 可移植性
+## ⚠️ 可移植性注意
 
-本仓库的 `Run-Pi-Here.reg` **已按可移植方式生成**：
+`.reg` 是静态文件，其中两处路径写死了 `C:\Users\<YourName>`：**图标路径**、**`wt.exe` 路径**。
+换机器或移动仓库后需先改 `.reg` 再重新导入：
 
-| 项 | 写法 | 说明 |
-|---|---|---|
-| `Icon` | `hex(2):...`（REG_EXPAND_SZ） | 实际存的是 `%USERPROFILE%\Projects\windows-everforest-rice\system-tweaks\context-menu\run-pi-here.ico`，导入后随环境变量展开 |
-| `command` | `wt.exe -d "%V" pwsh -NoExit -Command "pi"` | 依赖 `wt.exe` 在 PATH（Windows Terminal 默认如此） |
+| 原值 | 可移植写法 |
+|---|---|
+| `%USERPROFILE%\Projects\windows-everforest-rice\system-tweaks\...\run-pi-here.ico` | `%USERPROFILE%\Projects\system-tweaks\...\run-pi-here.ico`（需 `REG_EXPAND_SZ` 类型才会展开） |
+| `wt.exe` | 若 `wt.exe` 已在 PATH，可直接写 `wt.exe` |
 
-仓库要 clone 到 `%USERPROFILE%\Projects\windows-everforest-rice`。放在别处的话，
-改 `Icon` 的 hex(2) 字符串（那是「UTF-16LE + 结尾 00 00」的十六进制）后重新导入，
-或者干脆用 PowerShell 直接写：
-
-```powershell
-$ico = "$env:USERPROFILE\Projects\windows-everforest-rice\system-tweaks\context-menu\run-pi-here.ico"
-foreach ($k in 'Directory\Background','Directory','Drive') {
-    $p = "HKCU:\Software\Classes\$k\shell\RunPiHere"
-    New-Item -Path $p -Force | Out-Null
-    Set-ItemProperty $p -Name '(default)' -Value 'Run Pi Here'
-    Set-ItemProperty $p -Name Icon -Value $ico -Type ExpandString
-    New-Item -Path "$p\command" -Force | Out-Null
-    Set-ItemProperty "$p\command" -Name '(default)' -Value 'wt.exe -d "%V" pwsh -NoExit -Command "pi"'
-}
-```
+> 上方「当前状态」保留的是本机**实际写入**的绝对路径，便于排查时对照。

@@ -1,183 +1,65 @@
 # Everforest (High Contrast / hard, dark) theme for Windows 11 Start Menu Styler (redesigned 25H2)
-# AUTO-GENERATED from palette/tokens.yaml（上游 everforest-themes 仓库） — 不要手改，改 tokens 后重跑生成器
+# AUTO-GENERATED from Themes/themes/everforest/tokens.yaml — 不要手改，改 tokens 后跑 generate.py
 # Based on sainnhe/everforest, hard/contrast = High, dark background.
 # Import: Windhawk > Windows 11 Start Menu Styler > Settings > "Textual mode" > paste this.
-
+#
+# 范围（2026-11 定稿）：只做「背景色 + 透明化 + 描边」三件事。
+#   文字色 / 圆角 / 悬停高光 / 图标色 / 按钮三态 —— 全部交回系统默认。
+#   （那些定制在 git 历史里可查：2026-11 之前的 183 行版本）
+#
+# 参数与 YASB 状态栏对齐（说明见 src/notification.yaml 顶部）：
+#   背景 #272e33 + Tint 0.45 + 亮度层 0.6（WindhawkBlur 不是系统亚克力，补参数见 src/notification.yaml）
+#   描边 #374145（= 角色「浮层」，与 yasb 的 border-bottom 同色；绿色只留给 accent）
 theme: ''
 disableNewStartMenuLayout: ''
 styleConstants:
-  # 玻璃画刷：与任务栏同一套参数，整个文件只定义这一次（改参数只改这里）
-  # 参考官方 TranslucentStartMenu 主题的分层：AcrylicBorder / BorderElement /
-  # AppBorder / TaskbarSearchBackground 各管一个页面区域，都拿这一个画刷当背景。
-  - GlassBrush=<WindhawkBlur BlurAmount="20" TintColor="#272e33" TintOpacity="0.72" FallbackColor="#272e33"/>
+  # 玻璃画刷：主面板 / 主页 / 应用列表 / 搜索页 / 文件夹浮层 / 右键菜单 共用这一个。
+  # （曾试过把背景让给 DWM SystemBackdrop，本系统上不生效，见 src/windhawk-translucent.yaml 的注释）
+  - GlassBrush=<AcrylicBrush TintColor="#272e33" TintOpacity="0.45" TintLuminosityOpacity="0.6" FallbackColor="#272e33"/>
 controlStyles:
+  # 主背景层（25H2 开始菜单实际生效的那层亚克力）+ 1px 描边
+  # 背景由本文件的 $GlassBrush 负责（DWM SystemBackdrop 对开始菜单不生效，
+  # 曾试过 translucent-windows 的 acrylicsystem，结果背景全透、没有模糊）。
   - target: Border#AcrylicBorder
     styles:
       - Background:=$GlassBrush
-      - BorderBrush=#a7c080
+      - BorderBrush=#374145
+      - BorderThickness=1
+  # 官方主题同样是直接折叠这一层：设透明仍会被它在上面叠一层色调
   - target: Border#AcrylicOverlay
     styles:
-      # 官方主题是直接折叠这一层（设透明仍会被它在上面叠一层色调）
       - Visibility=Collapsed
-  # 搜索框：两次尝试都没能匹配到真正生效的那一层，先回退原样、不再动。
-  # （若以后要修：需在 Windhawk 里开 XAML 诊断，拿到该元素的真实类名）
-  - target: StartMenu.SearchBoxToggleButton > Grid > Border
-    styles:
-      - Background=#1e2326
-      - BorderBrush=transparent
-  - target: StartMenu.ExpandedFolderList > Grid > Border
-    styles:
-      # flyout：与主背景同一层玻璃（Windows 原生 flyout 也是亚克力）
-      - Background:=$GlassBrush
+  # 主页背景层（系统的模糊原本挂在这一层）
   - target: Border#BorderElement
     styles:
-      # 主页背景层（官方把模糊放在这一层）
       - Background:=$GlassBrush
-      - BorderBrush=transparent
-  - target: Border#BorderUnderline
-    styles:
-      - Visibility=Collapsed
-  - target: Cortana.UI.Views.RichSearchBoxControl#SearchBoxControl > Grid > Grid#UnderlineContainer
-    styles:
-      - BorderBrush=transparent
-      - BorderThickness=0,0,0,0
-  - target: TextBlock#PlaceholderText
-    styles:
-      - Foreground=#80859289
-  - target: Windows.UI.Xaml.Controls.Button > Grid@CommonStates
-    styles:
-      # 平时不填色（原来 Normal 也是实色 = 每个按钮一块补丁）；
-      # 但状态必须区分，否则悬停/按下的渐变反馈会被抹平
-      - Background@Normal=Transparent
-      - Background@PointerOver=#374145
-      - Background@Pressed=#414b50
-      - CornerRadius=4
-  - target: StackPanel > Windows.UI.Xaml.Controls.Button
-    styles:
-      - Background=Transparent
-      - BorderBrush=Transparent
-  - target: Microsoft.UI.Xaml.Controls.ItemsRepeater > Windows.UI.Xaml.Controls.Button
-    styles:
-      - Background=Transparent
-      - BorderBrush=Transparent
-  # 应用名（Pinned 区）—— 基础色 fallback
-  - target: StartMenu.PinnedListTile > Grid#Root > Grid#DisplayNameAndDownloadIconContainer > TextBlock
-    styles:
-      - Foreground=#859289
-  - target: StartMenu.PinnedListTile > * > TextBlock
-    styles:
-      - Foreground=#859289
-  # 应用名文字——ui 三态（仅文字色，hover 背景渐变/边框保持不动）
-  # 状态组在内部 Grid@CommonStates 上（ListViewItem 标准状态名）
-  - target: StartMenu.PinnedListTile > Grid@CommonStates > * > TextBlock
-    styles:
-      - Foreground@Normal=#7a8478
-      - Foreground@PointerOver=#859289
-      - Foreground@Selected=#d3c6aa
-      - Foreground@PointerOverSelected=#d3c6aa
-  - target: TextBlock#DisplayName
-    styles:
-      - Foreground=#859289
-  - target: TextBlock#Title
-    styles:
-      - Foreground=#859289
-  - target: TextBlock#Subtitle
-    styles:
-      - Foreground=#859289
-  # 标题/强调文字 —— 绿色
-  - target: TextBlock#PinnedListHeaderText
-    styles:
-      - Foreground=#a7c080
-  - target: TextBlock#TopLevelSuggestionsListHeaderText
-    styles:
-      - Foreground=#a7c080
-  - target: TextBlock#AllAppsHeading
-    styles:
-      - Foreground=#a7c080
-  - target: TextBlock#AllListHeadingText
-    styles:
-      - Foreground=#a7c080
-  - target: TextBlock#MoreSuggestionsListHeaderText
-    styles:
-      - Foreground=#a7c080
-  # All Apps 区应用名 —— 米白正文
-  - target: GridView#AllAppsGrid > * > TextBlock
-    styles:
-      - Foreground=#859289
-  - target: TextBlock#AppDisplayName
-    styles:
-      - Foreground=#859289
-  - target: TextBlock#Text
-    styles:
-      - Foreground=#859289
-  - target: TextBlock#FolderGlyph
-    styles:
-      - Foreground=#dbbc7f
-  - target: TextBlock#StatusMessage
-    styles:
-      - Foreground=#a7c080
-  # 官方写法：状态组挂在中间的 ContentBorder 上。
-  # （写在最后一个 Border 上（> Border@CommonStates）解析不到状态，
-  #   表现就是“边框死活不出现”）
-  - target: Border#ContentBorder@CommonStates > Grid#DroppedFlickerWorkaroundWrapper > Border
-    styles:
-      # 用系统的 Reveal 画刷（官方主题在同一元素上也用它）。
-      #   Color   = 正文（米白），不用系统纯白，保住 Everforest 暖色调
-      #   Opacity = 强度，偏亮就往下调（0.06 / 0.08 / 0.12 …）
-      #
-      #  不要给这个 Border 挂 Transitions:=<TransitionCollection><BrushTransition .../>：
-      #  实测 Windhawk 的 styler 处理不了这种复合对象，属性设不进去，
-      #  且会让整条规则一起失效 —— 表现就是“悬停反馈全没了”。
-      - Background:=<RevealBorderBrush Color="#d3c6aa" TargetTheme="1" Opacity="0.06"/>
-      - CornerRadius=6
-  - target: Windows.UI.Xaml.Controls.Border#ContentBorder > Windows.UI.Xaml.Controls.Grid#DroppedFlickerWorkaroundWrapper > Border#BackgroundBorder
-    styles:
-      - Background=Transparent
+  # 应用列表 / 详情页容器
   - target: Border#AppBorder
     styles:
       - Background:=$GlassBrush
+  # 搜索页背景
   - target: Border#TaskbarSearchBackground
     styles:
       - Background:=$GlassBrush
       - BorderBrush=Transparent
-  - target: Grid
+  # 文件夹展开浮层
+  - target: StartMenu.ExpandedFolderList > Grid > Border
     styles:
-      - RequestedTheme=2
-  - target: TextBlock#UserTileNameText
+      - Background:=$GlassBrush
+  # 搜索框：保持「最深」实色 —— 玻璃下方需要一层不透明底，
+  # 否则输入区文字压在模糊上对比度不足（这是唯一非玻璃的填充）
+  - target: StartMenu.SearchBoxToggleButton > Grid > Border
     styles:
-      - Foreground=#d3c6aa
-  - target: Windows.UI.Xaml.Controls.ContentPresenter > Windows.UI.Xaml.Controls.FontIcon > Windows.UI.Xaml.Controls.Grid > Windows.UI.Xaml.Controls.TextBlock
-    styles:
-      - Foreground=#9da9a0
-  - target: Windows.UI.Xaml.Controls.Grid > Windows.UI.Xaml.Controls.FontIcon > Windows.UI.Xaml.Controls.Grid > Windows.UI.Xaml.Controls.TextBlock
-    styles:
-      - Foreground=#dbbc7f
-  # 交互反馈：RevealBorderBrush（跟随光标的“揭示”高光）
-  # 官方主题给「所有应用」列表项的写法；BorderThickness=1 + Margin 保证不会挤到文字
-  - target: StartDocked.AppListViewItem > Grid@CommonStates > Border
-    styles:
-      - Background:=<RevealBorderBrush Color="Transparent" TargetTheme="1" Opacity="0.45"/>
-      - BorderBrush:=<RevealBorderBrush Color="Transparent" TargetTheme="1" Opacity="0.7"/>
-      - BorderThickness=1
-  # 右键菜单：玻璃 + 1px 描边（亚克力浮层需要描边才“浮”得起来）
-  # target 用官方主题的写法（Presenter > Border）：比直接改 Presenter 更精确，
-  # 不会把背景铺在交互容器本身。
+      - Background=#1e2326
+      - BorderBrush=transparent
+  # 右键菜单：玻璃 + 1px 描边（亚克力浮层需要描边才「浮」得起来）
   - target: MenuFlyoutPresenter > Border
     styles:
       - Background:=$GlassBrush
-      - BorderBrush=#414b50
+      - BorderBrush=#374145
       - BorderThickness=1
-  - target: Windows.UI.Xaml.Controls.FontIcon#SearchGlyph > Windows.UI.Xaml.Controls.Grid > Windows.UI.Xaml.Controls.TextBlock
+  # 深色前景：保留这一条（RequestedTheme=2 = Dark）。
+  # 删掉后开始菜单会跟随系统明暗 —— 浅色设置下变成黑字浅底，不是要的效果。
+  - target: Grid
     styles:
-      - Foreground=#859289
-  - target: Microsoft.UI.Xaml.Controls.DropDownButton > Grid
-    styles:
-      # 视图切换等下拉按钮：不要实色底
-      - Background=Transparent
-themeResourceVariables:
-  - ''
-webContentStyles:
-  - target: ''
-    styles:
-      - ''
-webContentCustomJs: ''
+      - RequestedTheme=2

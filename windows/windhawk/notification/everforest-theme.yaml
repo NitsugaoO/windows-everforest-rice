@@ -1,0 +1,68 @@
+# Everforest (High Contrast / hard, dark) theme for Windows 11 Notification Center Styler
+# AUTO-GENERATED from Themes/themes/everforest/tokens.yaml — 不要手改，改 tokens 后跑 generate.py
+# Based on sainnhe/everforest, hard/contrast = High, dark background.
+# Import: Windhawk > Windows 11 Notification Center Styler > Settings > "Textual mode" > paste this.
+#
+# 范围（2026-11 定）：只做「背景色 + 透明化 + 描边」三件事，其余（文字色 / 圆角 /
+# 悬停反馈 / 图标）全部交回系统默认。一个 mod 同时覆盖：
+#   1. 通知中心（Win+N）      Grid#NotificationCenterGrid
+#   2. 日历 / 时钟弹出        Grid#CalendarCenterGrid
+#   3. 快速设置（音量亮度）    Grid#ControlCenterRegion
+#   4. 右下角 toast 卡片      Border#ToastBackgroundBorder(2)
+#
+# 参数与 YASB 状态栏对齐：
+#   - 色值 = 角色「背景」(#272e33)，与 yasb 的 --yasb-bar-bg / translucent-windows 的
+#     AccentBlurBehind(B8272E33) 同一个颜色。
+#   - 画刷用 **AcrylicBrush**（系统亚克力，与 WT 的 useAcrylic 同一个类），
+#     不用 WindhawkBlur。历史与原因：
+#     · WindhawkBlur 是 styler 自己实现的模糊，只做「模糊 + 线性 tint」，
+#       少了系统亚克力的**亮度层**和**噪点** → 无论怎么调都「灰、闷、不够深」。
+#     · AcrylicBrush = 模糊 + tint(TintOpacity) + 亮度层(TintLuminosityOpacity) + 噪点，
+#       与 WT / 系统弹出面板同一条管线。
+#     · 风险：Win11 的 shell 窗口里 AcrylicBrush 可能退化成纯色 —— 此时会显示 FallbackColor
+#       （实色 #272e33），表现是「突然变实」，容易判断。回退：把 GlassBrush 改回
+#       <WindhawkBlur BlurAmount="20" TintColor="..." TintOpacity="0.45" TintLuminosityOpacity="0.6" FallbackColor="..."/>
+#     曾按「DWM 72% + CSS 72% ≈ 0.92」手算过补偿值，实测偏实 → 这类参数只能按观感调。
+#   - 描边 = 角色「浮层」(#374145)，与 yasb 的 border-bottom 同色；绿色只留给 accent。
+styleConstants:
+  # 玻璃画刷：整个文件只定义这一次，改参数只改这里
+  - GlassBrush=<AcrylicBrush TintColor="#272e33" TintOpacity="0.45" TintLuminosityOpacity="0.6" FallbackColor="#272e33"/>
+controlStyles:
+  # 通知中心主面板
+  - target: Grid#NotificationCenterGrid
+    styles:
+      - Background:=$GlassBrush
+      - BorderBrush=#374145
+      - BorderThickness=1
+  # 日历 / 时钟弹出面板
+  - target: Grid#CalendarCenterGrid
+    styles:
+      - Background:=$GlassBrush
+      - BorderBrush=#374145
+      - BorderThickness=1
+  # 快速设置面板（音量 / 亮度 / 网络 / 蓝牙）
+  - target: Grid#ControlCenterRegion
+    styles:
+      - Background:=$GlassBrush
+      - BorderBrush=#374145
+      - BorderThickness=1
+  # 右下角 toast 卡片背景
+  # （ToastBackgroundBorder = 普通 toast，2 = 优先级/展开态；官方主题把两者写在一起）
+  - target: Border#ToastBackgroundBorder, Border#ToastBackgroundBorder2
+    styles:
+      - Background:=$GlassBrush
+      - BorderBrush=#374145
+      - BorderThickness=1
+  # toast 的外层容器：官方 TranslucentShell 主题同样把这一层设为透明，
+  # 否则它自己的底色会盖在 $GlassBrush 上面，玻璃等于白做。
+  - target: ActionCenter.FlexibleToastView#FlexibleNormalToastView
+    styles:
+      - Background=Transparent
+  # 通知中心 / 日历里的右键菜单（浮层，与开始菜单的右键菜单同观感）
+  - target: MenuFlyoutPresenter > Border
+    styles:
+      - Background:=$GlassBrush
+      - BorderBrush=#374145
+      - BorderThickness=1
+themeResourceVariables:
+  - ''

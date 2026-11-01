@@ -245,10 +245,8 @@ Get-Process glazewm,yasb,steam,msedge,explorer -EA SilentlyContinue |
 ```powershell
 # 1. 删除计划任务
 Unregister-ScheduledTask -TaskName GlazeWM -Confirm:$false
-# 2. 重新加回 HKCU Run 项（本仓库不再附带改造前的 Run 键快照：
-#    那是本机自启软件的全量备份，含机器信息，已从发布版本移除）
-New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' `
-  -Name GlazeWM -Value "$env:USERPROFILE\scoop\apps\glazewm\current\glazewm.exe" -Force
+# 2. 恢复 Run 键项
+reg import "%USERPROFILE%\Projects\windows-everforest-rice\system-tweaks\tweaks\glazewm-startup\HKCU-Run-20260913-005910.reg"
 # 3. 删包装脚本（可选）
 Remove-Item "%USERPROFILE%\.glzr\launch-glazewm.vbs"
 ```
@@ -260,6 +258,7 @@ Remove-Item "%USERPROFILE%\.glzr\launch-glazewm.vbs"
 | `README.md` | 本文档 |
 | `launch-glazewm.vbs` | 启动包装脚本的归档副本（实际生效位置 `~/.glzr/`） |
 | `GlazeWM-task.xml` | 计划任务定义导出（`Export-ScheduledTask`），**含 `<Delay>PT15S</Delay>`**，可用于重建任务 |
+| `HKCU-Run-20260913-005910.reg` | 改造前的 `HKCU\...\Run` 完整备份 |
 | ~~`config.yaml.snapshot`~~ | 归档时点的 `glazewm/config.yaml` 快照，**已于 2026-09-13 删除**（原因见下方「相关位置」） |
 
 ## 重建步骤（新机器 / 恢复）
@@ -281,7 +280,7 @@ Remove-Item "%USERPROFILE%\.glzr\launch-glazewm.vbs"
 | 内容 | 位置 |
 |---|---|
 | GlazeWM 配置（**权威源**） | `~/Projects/my_dot/dotfiles/glazewm/config.yaml` |
-| GlazeWM 配置（实际生效） | `~/.glzr/glazewm/config.yaml`（把本仓库 `windows/glazewm/config.yaml` 拷过去） |
+| GlazeWM 配置（实际生效） | `~/.glzr/glazewm/config.yaml`（用 `my_dot\sync-dotfiles.ps1` 部署） |
 | yasb 配置（**权威源**） | `~/Projects/my_dot/dotfiles/yasb/` → `~/.config/yasb/` |
 | 启动包装脚本 | `~/Projects/my_dot/dotfiles/glazewm/launch-glazewm.vbs` → `~/.glzr/launch-glazewm.vbs` |
 

@@ -31,14 +31,17 @@
     │   └── README.md
     ├── desktop-icons-toggle/        ← 双击桌面切换图标显示/隐藏
     │   ├── README.md
-    │   └── desktop-icons-double-click-toggle2.wh.cpp            ← mod 源码（v1.3）
+    │   ├── desktop-icons-double-click-toggle2.wh.cpp            ← 修改版 mod 源码
+    │   ├── desktop-icons-double-click-toggle2-original-v1.1.wh.cpp  ← 原始版（对比用）
+    │   └── patch_desktop_toggle_mod.py                          ← 补丁脚本
     ├── start-menu-pi/               ← 开始菜单「所有应用」加入 Pi
     │   ├── README.md
     │   └── add-start-menu-pi.ps1    ← 生成 Pi.lnk（UTF-8 BOM）
     ├── glazewm-startup/             ← GlazeWM 提前自启（绕开 explorer 启动队列）
     │   ├── README.md
     │   ├── launch-glazewm.vbs       ← 启动包装脚本（副本）
-    │   └── GlazeWM-task.xml         ← 计划任务定义导出（含 Delay=PT15S）
+    │   ├── GlazeWM-task.xml         ← 计划任务定义导出（含 Delay=PT15S）
+    │   └── HKCU-Run-*.reg           ← 改造前的 Run 键备份
     ├── onedrive-uninstall/          ← 卸载 OneDrive
     │   └── README.md
     └── razer-synapse-autostart/     ← 关闭雷蛇 Synapse 开机自启
@@ -94,6 +97,6 @@
 
 | 内容 | 位置 |
 |---|---|
-| Everforest 主题 | 本仓库 `palette/`、`windows/`、`editors/`、`apps/`（上游私有仓库 `everforest-themes` 产线） |
-| GlazeWM / yasb 配置 | 本仓库 `windows/glazewm/`、`windows/yasb/` |
+| Everforest 主题管理体系 | `~/Themes/`（git 仓库 `everforest-themes`） |
+| GlazeWM / yasb 配置的权威副本 | `~/Projects/my_dot/dotfiles/glazewm/`、`~/Projects/my_dot/dotfiles/yasb/`（由该仓库 `sync-dotfiles.ps1` 部署） |
 | pi 插件归档 | `~/.pi/my-plugins/`（git 仓库 `my-plugins`） |

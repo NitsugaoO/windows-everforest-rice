@@ -60,11 +60,15 @@ static bool IsDesktopLabelEditingLocked();
 
 验证：explorer 加载了 `..._1.3_883825.dll`，`SysListView32` 初始 `IsWindowVisible=False`（图标已隐藏）。
 
+> `patch_desktop_toggle_mod.py` 仅适用于 v1.1 → v1.2，不再用于 v1.3，后续以源码为准。
+
 ## 文件清单
 
 | 文件 | 说明 |
 |---|---|
-| `desktop-icons-double-click-toggle2.wh.cpp` | mod 源码（v1.3，含开机自动隐藏 + F2 修复） |
+| `desktop-icons-double-click-toggle2.wh.cpp` | 修复后源码（v1.3，含开机自动隐藏 + F2 修复） |
+| `desktop-icons-double-click-toggle2-original-v1.1.wh.cpp` | 原始源码（v1.1），未修改 |
+| `patch_desktop_toggle_mod.py` | 自动打补丁脚本（原文件 → 修复版，含全部 4 处替换） |
 | `README.md` | 本文档 |
 
 ## 已修改的系统文件

@@ -2,11 +2,15 @@
 
 将 [sainnhe/everforest](https://github.com/sainnhe/everforest) 的 **hard（高对比度）暗色**调色板，映射到 Windhawk 的 **Windows 11 Start Menu Styler** 模块配置。参照自 styling-guide 仓库的 [Everblush 主题](https://github.com/ramensoftware/windows-11-start-menu-styling-guide/tree/main/Themes/Everblush)（同为绿色系暗色，结构最接近）。
 
-文件清单（**当前主用 = 暗色硬编码版**）：
+> **2026-11 精简重做**：现在只做「背景色 + 透明化 + 描边」三件事，文字色 / 圆角 /
+> 悬停高光 / 图标色 / 按钮三态全部交回系统默认（旧版 183 行的完整定制见 git 历史）。
+> 参数与 YASB 状态栏 / WT 对齐：`AcrylicBrush` + `TintOpacity=0.45` + 亮度层 `0.6`、描边 `#374145`，理由见
+> [`../Notification/README.md`](../Notification/README.md)。
 
-- `everforest-theme.yaml` —— **主用**。适配 **redesigned 25H2 开始菜单**（hard 暗色，硬编码 hex）
-- `everforest-theme-classic.yaml` —— **主用**。适配 **classic 开始菜单**（hard 暗色，硬编码 hex）
-- `everforest-theme-light.yaml` / `everforest-theme-classic-light.yaml` —— **备选浅色版**（hard 浅色，手动切换时粘贴用）
+文件清单：
+
+- `everforest-theme.yaml` —— **主用**。适配 **redesigned 25H2 开始菜单**（已按 2026-11 精简）
+- `everforest-theme-classic.yaml` —— 备用。适配 **classic 开始菜单**（**尚未精简**，仍是完整定制版）
 - `_archive/everforest-theme-auto.yaml` —— **已弃用试验**（明暗感知版，`{ThemeResource}` 会随系统明暗自动切换，但因 YAML `{}` flow-map 报错且用户决定暂不用，移入归档；将来写"自动切换脚本"时可参考其 `@Dark/@Light` 资源机制）
 
 > 决定记录（2026-08-28）：Start Menu 维持**只使用暗色硬编码版**；"随系统明暗自动切换"改为**待办**，等再做几个软件的主题后写脚本实现。
@@ -22,18 +26,11 @@
 
 | Windhawk 角色 | Everforest token | hex |
 |---|---|---|
-| 开始菜单/搜索底板背景 | `bg0` | `#272e33` |
-| 搜索框/文件夹浮层/弹层背景 | `bg1` | `#2e383c` |
-| 主文字 | `fg` | `#d3c6aa` |
-| 次级文字 | `grey2` | `#9da9a0` |
-| 强调色（列表标题、状态文字） | `green` | `#a7c080` |
-| 次级强调（标题、文件夹图标、文本） | `yellow` | `#dbbc7f` |
-| 用户头像名 | `blue` | `#7fbbb3` |
-| 图标次级强调 | `grey2` | `#9da9a0` |
-| 按钮背景（"全部显示""视图：网格"等） | `bg0` | `#272e33` |
-| 半透明强调/描边 | `green`+alpha | `#26a7c080` / `#82a7c080` |
+| 玻璃背景（主面板 / 主页 / 应用列表 / 搜索页 / 文件夹浮层 / 右键菜单） | `bg0`｜背景 | `#272e33` |
+| 描边（主面板 + 右键菜单，1px） | `bg2`｜浮层 | `#374145` |
+| 搜索框底（唯一的实色填充） | `bg_dim`｜最深 | `#1e2326` |
 
-（`#26`/`#d2` 为 alpha 前缀，`#26`≈15% 透明、`#d2`≈82%，与 Everblush 主题一致。）
+> 前两行与 yasb 状态栏用的是同一对色（背景 + 浮层）；绿色不再出现在边框上。
 
 ## 可选：搜索 WebView 的 CSS
 
